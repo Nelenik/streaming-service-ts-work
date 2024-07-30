@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "target":"ES6",
+    "allowJs": true,
+    "moduleResolution": "Bundler",
+    "sourceMap": true,
+    "paths": {
+      "img/*": ["src/img/*"],
+      "components/*":["src/ts/components/*"],
+      "helpers":["src/ts/helpers"],
+      "types": ["src/types"],
+      "mocks": ["src/mocks"],
+      "core": ["src/ts/core"]
+    },
+    "lib": ["ESNext", "DOM"]
+  },
+  "include": [
+    "src" ],
+  "files": ["src/ts/main.ts"]
+}
