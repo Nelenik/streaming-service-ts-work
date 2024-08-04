@@ -1,4 +1,4 @@
 export * from "./getSongDur";
 export * from "./getWordEnding";
 export * from "./getDaysAgo";
-export * from "./createElements";
+export * from "../core/createElements";

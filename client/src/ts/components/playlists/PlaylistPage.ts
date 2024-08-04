@@ -13,9 +13,7 @@ export class PlaylistPage extends Component {
   `;
   }
   renderParts(): void {
-    const playlistsElems = playlists.map(
-      (data) => new Playlist({ data }).element
-    );
+    const playlistsElems = playlists.map((data) => new Playlist({ data }));
     this.insertChildren(".playlist__list", playlistsElems, "append");
   }
 }

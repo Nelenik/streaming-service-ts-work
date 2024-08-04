@@ -1,8 +1,8 @@
-import { Component } from "core";
+import { Component, ComponentOptions } from "core";
 import { getWordEndigs } from "helpers";
 import { images, PlaylistData } from "mocks";
 
-interface PlaylistOptions {
+interface PlaylistOptions extends ComponentOptions {
   data: PlaylistData;
 }
 

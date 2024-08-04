@@ -1,6 +1,7 @@
-import { renderElement } from "core";
-import { createElement } from "helpers";
+import { render, createElement } from "core";
 import { InsertMethods } from "types";
+
+const NOOP = () => {};
 
 export interface ComponentOptions {
   [key: string]: unknown;
@@ -33,14 +34,29 @@ export abstract class Component<T = ComponentOptions> {
 
   insertChildren(
     selectorOrElement: string | Element,
-    elToInsert: HTMLElement | HTMLElement[],
+    componentToInsert: Component | Component[],
     method: InsertMethods
   ) {
     const container =
       selectorOrElement instanceof Element
         ? selectorOrElement
-        : this.element.querySelector(selectorOrElement);
-    renderElement(container, elToInsert, method);
+        : this.element?.querySelector(selectorOrElement);
+    render(container, componentToInsert, method);
   }
   renderParts(): void {}
+
+  on(
+    eventType: string,
+    element: Element,
+    cb: EventListenerOrEventListenerObject = NOOP
+  ) {
+    element.addEventListener(eventType, cb);
+  }
+  off(
+    eventType: string,
+    element: Element,
+    cb: EventListenerOrEventListenerObject = NOOP
+  ) {
+    element.removeEventListener(eventType, cb);
+  }
 }

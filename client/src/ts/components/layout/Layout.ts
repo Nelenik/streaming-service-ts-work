@@ -14,8 +14,8 @@ export class Layout extends Component {
   `;
   }
   renderParts() {
-    this.insertChildren(".main", new Aside().element, "before");
-    this.insertChildren(".main", new SongsPage().element, "append");
-    this.insertChildren(".main", new PlaylistPage().element, "append");
+    this.insertChildren(".main", new Aside(), "before");
+    this.insertChildren(".main", new SongsPage(), "append");
+    this.insertChildren(".main", new PlaylistPage(), "append");
   }
 }

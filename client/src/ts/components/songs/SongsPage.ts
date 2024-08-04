@@ -32,9 +32,10 @@ export class SongsPage extends Component {
   `;
   }
   renderParts(): void {
-    const songsElements = songsList.map((song: Song, i: number) =>
-      new SongComponent({ data: song, num: i, isLiked: true }).getElement()
+    const songsComponents = songsList.map(
+      (song: Song, i: number) =>
+        new SongComponent({ data: song, num: i, isLiked: true })
     );
-    this.insertChildren(".tracks__list", songsElements, "append");
+    this.insertChildren(".tracks__list", songsComponents, "append");
   }
 }

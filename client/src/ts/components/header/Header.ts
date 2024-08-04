@@ -16,7 +16,7 @@ export class Header extends Component {
   `;
   }
   renderParts(): void {
-    this.insertChildren(this.element, new Search().element, "append");
-    this.insertChildren(this.element, new Profile().element, "append");
+    this.insertChildren(this.element, new Search(), "append");
+    this.insertChildren(this.element, new Profile(), "append");
   }
 }

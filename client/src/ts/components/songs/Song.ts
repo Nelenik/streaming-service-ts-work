@@ -1,8 +1,8 @@
 import { Component, ComponentOptions } from "core";
-import { getSongDurStr, getDaysAgo, createElement } from "helpers";
+import { getSongDurStr, getDaysAgo } from "helpers";
 import { images, Song } from "mocks";
 
-interface SongOptions {
+interface SongOptions extends ComponentOptions {
   data: Song;
   num: number;
   isLiked: boolean;
