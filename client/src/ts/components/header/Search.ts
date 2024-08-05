@@ -1,6 +1,10 @@
 import { Component } from "core";
 
 export class Search extends Component {
+  constructor() {
+    super();
+    this.mount(".header", "append");
+  }
   getTemplate(): string {
     return `
     <div class="header__search">

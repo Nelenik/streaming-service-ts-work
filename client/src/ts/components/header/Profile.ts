@@ -2,6 +2,10 @@ import { Component } from "core";
 import userImg from "img/user.jpg";
 
 export class Profile extends Component {
+  constructor() {
+    super();
+    this.mount(".header", "append");
+  }
   getTemplate(): string {
     return `
     <button class="header__user">

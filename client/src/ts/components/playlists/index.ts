@@ -1,2 +1,2 @@
 export * from "./Playlist";
-export * from "./PlaylistPage";
+export * from "./PlaylistsList";

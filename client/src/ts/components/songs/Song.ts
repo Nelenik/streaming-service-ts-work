@@ -11,6 +11,7 @@ interface SongOptions extends ComponentOptions {
 export class SongComponent extends Component<SongOptions> {
   constructor(options: SongOptions) {
     super(options);
+    this.mount(".tracks__list", "append");
   }
 
   getTemplate(): string {

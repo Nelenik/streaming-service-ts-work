@@ -9,6 +9,7 @@ interface PlaylistOptions extends ComponentOptions {
 export class Playlist extends Component<PlaylistOptions> {
   constructor(options: PlaylistOptions) {
     super(options);
+    this.mount(".playlist__list", "append");
   }
   getTemplate(): string {
     let { data } = this.options;

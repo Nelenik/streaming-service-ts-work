@@ -1,6 +1,10 @@
 import { Component } from "core";
 
 export class Aside extends Component {
+  constructor() {
+    super();
+    this.mount(".content-wrap", "prepend");
+  }
   getTemplate(): string {
     return `
     <aside class="aside">

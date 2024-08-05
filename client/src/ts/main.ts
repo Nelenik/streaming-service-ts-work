@@ -1,11 +1,8 @@
+import { Footer } from "components/footer";
 import "../index.html";
 import "../styles/style.scss";
-import { render } from "core";
-import { Header } from "components/header";
-import { Footer } from "components/footer";
-import { Layout } from "components/layout";
+import { HeaderPresenter, LayoutPresenter } from "presenters";
 
-const container = document.getElementById("app");
-render(container, new Header(), "append");
-render(container, new Layout(), "append");
-render(container, new Footer(), "append");
+new HeaderPresenter();
+new LayoutPresenter();
+new Footer();

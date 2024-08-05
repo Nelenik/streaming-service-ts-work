@@ -3,6 +3,10 @@ import { Profile } from "./Profile";
 import { Search } from "./Search";
 
 export class Header extends Component {
+  constructor() {
+    super();
+    this.mount("#app", "append");
+  }
   getTemplate(): string {
     return `
     <header class="header flex">
@@ -15,8 +19,8 @@ export class Header extends Component {
     </header>
   `;
   }
-  renderParts(): void {
-    this.insertChildren(this.element, new Search(), "append");
-    this.insertChildren(this.element, new Profile(), "append");
-  }
+  // renderParts(): void {
+  //   this.insertChildren(this.element, new Search(), "append");
+  //   this.insertChildren(this.element, new Profile(), "append");
+  // }
 }

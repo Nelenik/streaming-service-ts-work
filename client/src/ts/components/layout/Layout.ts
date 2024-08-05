@@ -1,10 +1,14 @@
 import { Aside } from "components/aside";
-import { PlaylistPage } from "components/playlists";
+import { PlaylistsList } from "components/playlists";
 // import { playlistsPage } from "components/playlists";
-import { SongsPage } from "components/songs";
+import { SongsList } from "components/songs";
 import { Component } from "core";
 
 export class Layout extends Component {
+  constructor() {
+    super();
+    this.mount("#app", "append");
+  }
   getTemplate(): string {
     return `
     <div class="content-wrap flex">
@@ -12,10 +16,5 @@ export class Layout extends Component {
       </main>
     </div>
   `;
-  }
-  renderParts() {
-    this.insertChildren(".main", new Aside(), "before");
-    this.insertChildren(".main", new SongsPage(), "append");
-    this.insertChildren(".main", new PlaylistPage(), "append");
   }
 }

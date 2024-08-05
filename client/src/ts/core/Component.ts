@@ -1,20 +1,30 @@
 import { render, createElement } from "core";
 import { InsertMethods } from "types";
+import { deepEqual } from "helpers";
 
 const NOOP = () => {};
 
 export interface ComponentOptions {
   [key: string]: unknown;
 }
-export abstract class Component<T = ComponentOptions> {
+export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   private _element: HTMLElement | null = null;
 
-  constructor(protected options: T = null) {
+  constructor(protected _options: T = null) {
     this.getElement();
-    this.renderParts();
   }
 
   abstract getTemplate(): string;
+
+  set options(val) {
+    if (deepEqual(val, this._options)) return;
+    this._options = val;
+    this.updateComponent();
+  }
+
+  get options() {
+    return this._options;
+  }
 
   set element(val) {
     this._element = val;
@@ -28,22 +38,22 @@ export abstract class Component<T = ComponentOptions> {
     this.element ??= createElement(this.getTemplate());
     return this.element;
   }
-  removeElement(): void {
+  removeElement(): Component {
     this.element = null;
+    return this;
+  }
+  updateComponent(): Component {
+    this.removeElement().getElement();
+    return this;
   }
 
-  insertChildren(
-    selectorOrElement: string | Element,
-    componentToInsert: Component | Component[],
-    method: InsertMethods
-  ) {
+  mount(selectorOrElement: string | Element, method: InsertMethods): void {
     const container =
-      selectorOrElement instanceof Element
-        ? selectorOrElement
-        : this.element?.querySelector(selectorOrElement);
-    render(container, componentToInsert, method);
+      typeof selectorOrElement === "string"
+        ? document.querySelector(selectorOrElement)
+        : selectorOrElement;
+    render(container, this, method);
   }
-  renderParts(): void {}
 
   on(
     eventType: string,

@@ -1,8 +1,14 @@
 import { Song, songsList } from "mocks";
 import { Component } from "core";
 import { SongComponent } from "./Song";
+import { SongPresenter } from "presenters";
+import { InsertMethods } from "types";
 
-export class SongsPage extends Component {
+export class SongsList extends Component {
+  constructor() {
+    super();
+    this.mount(".main", "append");
+  }
   getTemplate(): string {
     return `
     <section class="tracks section tabs-content section--active" data-target="tracks">
@@ -31,11 +37,13 @@ export class SongsPage extends Component {
     </section>
   `;
   }
-  renderParts(): void {
-    const songsComponents = songsList.map(
-      (song: Song, i: number) =>
-        new SongComponent({ data: song, num: i, isLiked: true })
-    );
-    this.insertChildren(".tracks__list", songsComponents, "append");
-  }
+  // renderParts(): void {
+  //   const songsComponents = songsList.map((song, i) => {
+  //     // return new SongComponent({ data: song, num: i, isLiked: true })
+  //     const songPres = new SongPresenter(song, i);
+  //     songPres.init();
+  //     return songPres.component;
+  //   });
+  //   this.insertChildren(".tracks__list", songsComponents, "append");
+  // }
 }

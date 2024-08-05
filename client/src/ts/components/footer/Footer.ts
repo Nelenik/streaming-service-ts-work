@@ -2,6 +2,10 @@ import { Component } from "core";
 import track1Img from "img/tracks(1).jpg";
 
 export class Footer extends Component {
+  constructor() {
+    super();
+    this.mount("#app", "append");
+  }
   getTemplate(): string {
     return `
     <footer class="footer">

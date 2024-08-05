@@ -76,6 +76,7 @@ const config = {
       types: path.resolve(__dirname, "src/types"),
       mocks: path.resolve(__dirname, "src/mocks"),
       core: path.resolve(__dirname, "src/ts/core"),
+      presenters: path.resolve(__dirname, "src/ts/presenters"),
     },
   },
 };
