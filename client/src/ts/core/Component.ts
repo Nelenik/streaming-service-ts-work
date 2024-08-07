@@ -19,15 +19,11 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   set options(val) {
     if (deepEqual(val, this._options)) return;
     this._options = val;
-    this.updateComponent();
+    this.getElement();
   }
 
   get options() {
     return this._options;
-  }
-
-  set element(val) {
-    this._element = val;
   }
 
   get element() {
@@ -35,17 +31,22 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   }
 
   getElement(): HTMLElement {
-    this.element ??= createElement(this.getTemplate());
-    return this.element;
+    const newElement = createElement(this.getTemplate());
+    if (this._element === null) {
+      this._element = newElement;
+    } else {
+      this._element.replaceWith(newElement);
+      this._element = newElement;
+    }
+    this.setHandlers();
+    return this._element;
   }
   removeElement(): Component {
-    this.element = null;
+    this._element = null;
     return this;
   }
-  updateComponent(): Component {
-    this.removeElement().getElement();
-    return this;
-  }
+
+  setHandlers(): void {}
 
   mount(selectorOrElement: string | Element, method: InsertMethods): void {
     const container =

@@ -1,4 +1,4 @@
-import { SongComponent } from "components/songs";
+import { Like, SongComponent } from "components/songs";
 import { Component, Presenter } from "core";
 import { Song } from "mocks";
 
@@ -16,18 +16,23 @@ export class SongPresenter extends Presenter {
   init() {
     this.component = new SongComponent({
       data: this.songData,
-      isLiked: true,
       num: this.num,
     });
 
-    this.component.on(
-      "click",
-      this.component.element,
-      this.greetHandler.bind(this)
+    //render like component
+    const likeParent = this.component.element.querySelector(
+      ".tracks__item__data"
     );
+    new Like({
+      isLiked: true,
+      onLike: this.likeHandler,
+    }).mount(likeParent, "append");
   }
 
-  greetHandler() {
-    console.log("hello track");
+  likeHandler(component: Component) {
+    component.options = {
+      ...component.options,
+      isLiked: !component.options.isLiked,
+    };
   }
 }

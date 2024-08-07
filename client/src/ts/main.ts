@@ -1,7 +1,11 @@
 import { Footer } from "components/footer";
 import "../index.html";
 import "../styles/style.scss";
-import { HeaderPresenter, LayoutPresenter } from "presenters";
+import {
+  HeaderPresenter,
+  LayoutPresenter,
+  SongsListPresenter,
+} from "presenters";
 
 new HeaderPresenter();
 new LayoutPresenter();
