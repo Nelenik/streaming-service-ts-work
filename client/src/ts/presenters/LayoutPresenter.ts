@@ -10,8 +10,8 @@ export class LayoutPresenter extends Presenter {
   }
 
   init() {
-    this.component = new Layout();
-    new Aside();
+    this.component = new Layout().mount("#app", "append");
+    new Aside().mount(".content-wrap", "prepend");
     new SongsListPresenter();
     new PlaylistPresenter();
   }

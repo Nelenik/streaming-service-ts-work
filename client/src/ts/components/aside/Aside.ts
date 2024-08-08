@@ -3,10 +3,10 @@ import { Component } from "core";
 export class Aside extends Component {
   constructor() {
     super();
-    this.mount(".content-wrap", "prepend");
+    // this.mount(".content-wrap", "prepend");
   }
   getTemplate(): string {
-    return `
+    return /*html*/ `
     <aside class="aside">
         <h2 class="aside__h2 visually-hidden">Левая панель навигации</h2>
         <nav class="aside__nav">

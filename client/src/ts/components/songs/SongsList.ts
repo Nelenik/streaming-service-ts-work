@@ -3,10 +3,10 @@ import { Component } from "core";
 export class SongsList extends Component {
   constructor() {
     super();
-    this.mount(".main", "append");
+    // this.mount(".main", "append");
   }
   getTemplate(): string {
-    return `
+    return /*html*/ `
     <section class="tracks section tabs-content section--active" data-target="tracks">
       <h2 class="tracks__h2 title__h2">Треки</h2>
       <div class="tracks__content">

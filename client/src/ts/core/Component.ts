@@ -1,6 +1,6 @@
 import { render, createElement } from "core";
 import { InsertMethods } from "types";
-import { deepEqual } from "helpers";
+import { deepEqual, getContainer } from "helpers";
 
 const NOOP = () => {};
 
@@ -48,12 +48,10 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
 
   setHandlers(): void {}
 
-  mount(selectorOrElement: string | Element, method: InsertMethods): void {
-    const container =
-      typeof selectorOrElement === "string"
-        ? document.querySelector(selectorOrElement)
-        : selectorOrElement;
+  mount(selectorOrElement: string | Element, method: InsertMethods): Component {
+    const container = getContainer(selectorOrElement);
     render(container, this, method);
+    return this;
   }
 
   on(

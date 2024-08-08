@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
@@ -77,6 +78,7 @@ const config = {
       mocks: path.resolve(__dirname, "src/mocks"),
       core: path.resolve(__dirname, "src/ts/core"),
       presenters: path.resolve(__dirname, "src/ts/presenters"),
+      styles: path.resolve(__dirname, "src/styles"),
     },
   },
 };

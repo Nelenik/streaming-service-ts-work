@@ -9,18 +9,18 @@ interface PlaylistOptions extends ComponentOptions {
 export class Playlist extends Component<PlaylistOptions> {
   constructor(options: PlaylistOptions) {
     super(options);
-    this.mount(".playlist__list", "append");
+    // this.mount(".playlist__list", "append");
   }
   getTemplate(): string {
-    let { data } = this.options;
-    let basePath = images.find((el) => el.includes(data.cover.base));
-    let _360Path = images.find((el) => el.includes(data.cover._360));
-    let _1440Path = images.find((el) => el.includes(data.cover._1440));
-    let songsCount = data.songs.length
+    const { data } = this.options;
+    const basePath = images.find((el) => el.includes(data.cover.base));
+    const _360Path = images.find((el) => el.includes(data.cover._360));
+    const _1440Path = images.find((el) => el.includes(data.cover._1440));
+    const songsCount = data.songs.length
       ? getWordEndigs(data.songs.length, ["трек", "трека", "треков"])
       : "Плейлист пока пуст";
 
-    return `
+    return /*html*/ `
     <li class="playlist__item">
       <picture>
         <source srcset="${_360Path}" media="(max-width: 576px)">

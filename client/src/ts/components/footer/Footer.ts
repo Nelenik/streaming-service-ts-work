@@ -4,10 +4,10 @@ import track1Img from "img/tracks(1).jpg";
 export class Footer extends Component {
   constructor() {
     super();
-    this.mount("#app", "append");
+    // this.mount("#app", "append");
   }
   getTemplate(): string {
-    return `
+    return /*html*/ `
     <footer class="footer">
       <div class="player flex">
         <div class="player__track-name flex"><img class="player__track__img" src="${track1Img}" alt="Histoire Sans Nom - Ludovico Einaudi, Czech National Symphony Orchestra">

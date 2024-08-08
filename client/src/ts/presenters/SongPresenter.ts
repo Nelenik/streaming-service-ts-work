@@ -1,6 +1,8 @@
 import { Like, SongComponent } from "components/songs";
 import { Component, Presenter } from "core";
 import { Song } from "mocks";
+// import { Modal } from "../services";
+// import { RemoveSong } from "components/modals";
 
 export class SongPresenter extends Presenter {
   component: Component;
@@ -17,7 +19,7 @@ export class SongPresenter extends Presenter {
     this.component = new SongComponent({
       data: this.songData,
       num: this.num,
-    });
+    }).mount(".tracks__list", "append");
 
     //render like component
     const likeParent = this.component.element.querySelector(

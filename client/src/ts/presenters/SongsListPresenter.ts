@@ -8,7 +8,7 @@ export class SongsListPresenter extends Presenter {
     this.init();
   }
   init() {
-    this.component = new SongsList();
+    this.component = new SongsList().mount(".main", "append");
     songsList.forEach((song, i) => {
       new SongPresenter(song, i);
     });

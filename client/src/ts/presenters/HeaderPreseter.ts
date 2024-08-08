@@ -7,8 +7,8 @@ export class HeaderPresenter extends Presenter {
     this.init();
   }
   init() {
-    this.component = new Header();
-    new Search();
-    new Profile();
+    this.component = new Header().mount("#app", "append");
+    new Search().mount(".header", "append");
+    new Profile().mount(".header", "append");
   }
 }

@@ -9,9 +9,9 @@ export class PlaylistPresenter extends Presenter {
   }
 
   init() {
-    this.component = new PlaylistsList();
+    this.component = new PlaylistsList().mount(".main", "append");
     playlists.forEach((playlist) => {
-      new Playlist({ data: playlist });
+      new Playlist({ data: playlist }).mount(".playlist__list", "append");
     });
   }
 }

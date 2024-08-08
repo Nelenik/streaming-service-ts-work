@@ -15,7 +15,8 @@
       "types": ["src/types"],
       "mocks": ["src/mocks"],
       "core": ["src/ts/core"],
-      "presenters": ["src/ts/presenters"]
+      "presenters": ["src/ts/presenters"],
+      "styles" : ["src/styles"]
     },
     "lib": ["ESNext", "DOM"]
   },

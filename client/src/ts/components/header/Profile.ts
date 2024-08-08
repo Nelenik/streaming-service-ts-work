@@ -4,10 +4,10 @@ import userImg from "img/user.jpg";
 export class Profile extends Component {
   constructor() {
     super();
-    this.mount(".header", "append");
+    // this.mount(".header", "append");
   }
   getTemplate(): string {
-    return `
+    return /*html*/ `
     <button class="header__user">
       <img class="header__user__img" src=${userImg} alt="Изображение пользователя">
       <span class="header__user__text">Tatiana L.</span>

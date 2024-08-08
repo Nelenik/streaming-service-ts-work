@@ -1,14 +1,12 @@
 import { Component } from "core";
-import { Profile } from "./Profile";
-import { Search } from "./Search";
 
 export class Header extends Component {
   constructor() {
     super();
-    this.mount("#app", "append");
+    // this.mount("#app", "append");
   }
   getTemplate(): string {
-    return `
+    return /*html*/ `
     <header class="header flex">
       <a class="header__logo" href="/">
         <svg width="143" height="29" viewBox="0 0 143 29" fill="none" xmlns="http://www.w3.org/2000/svg">
