@@ -10,7 +10,7 @@ export class SongsListPresenter extends Presenter {
   init() {
     this.component = new SongsList().mount(".main", "append");
     songsList.forEach((song, i) => {
-      new SongPresenter(song, i);
+      new SongPresenter(song, i, true);
     });
   }
 }

@@ -56,7 +56,7 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
 
   on(
     eventType: string,
-    element: Element,
+    element: EventTarget,
     cb: EventListenerOrEventListenerObject = NOOP
   ) {
     element.addEventListener(eventType, cb);

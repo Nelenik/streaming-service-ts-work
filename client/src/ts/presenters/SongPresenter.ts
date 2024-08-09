@@ -1,4 +1,4 @@
-import { Like, SongComponent } from "components/songs";
+import { Like, SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
 import { Song } from "mocks";
 // import { Modal } from "../services";
@@ -9,7 +9,8 @@ export class SongPresenter extends Presenter {
 
   constructor(
     public songData: Song,
-    public num: number
+    public num: number,
+    public inPlaylist: boolean
   ) {
     super();
     this.init();
@@ -29,6 +30,11 @@ export class SongPresenter extends Presenter {
       isLiked: true,
       onLike: this.likeHandler,
     }).mount(likeParent, "append");
+    //render menu
+    new SongMenu({
+      inPlaylist: true,
+      onMenuClick: () => console.log("menu clicked"),
+    }).mount(this.component.element, "append");
   }
 
   likeHandler(component: Component) {

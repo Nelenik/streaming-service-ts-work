@@ -10,6 +10,7 @@ export class RemoveSong extends Component<RemoveSongOptions> {
     return /*html*/ `
       <div class="modal">
         <div class="modal__content">
+          <h3 class="modal__title">Удалить из плейлиста</h3>
           <button class="del">Удалить</button>
           <button class="cancel">Отменить</button>
         </div>
