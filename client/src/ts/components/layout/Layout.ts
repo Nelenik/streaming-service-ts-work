@@ -1,16 +1,12 @@
 import { Component } from "core";
+import { html } from "helpers";
 
 export class Layout extends Component {
-  constructor() {
-    super();
-    // this.mount("#app", "append");
-  }
   getTemplate(): string {
-    return /*html*/ `
-    <div class="content-wrap flex">
-      <main class="main">
-      </main>
-    </div>
-  `;
+    return html`
+      <div class="content-wrap flex">
+        <main class="main"></main>
+      </div>
+    `;
   }
 }

@@ -1,30 +1,34 @@
 import { Component, ComponentOptions } from "core";
+import { html } from "helpers";
 
 interface SongMenuOptions extends ComponentOptions {
   inPlaylist: boolean;
-  onMenuClick: () => void;
+  onMenuClick: (type: "add" | "remove") => void;
 }
 
 export class SongMenu extends Component<SongMenuOptions> {
   private _isOpen: boolean = false;
   getTemplate(): string {
     const { inPlaylist } = this.options;
-
-    return /*html */ `
+    return html`
       <div class="tracks__item__drop">
         <button class="track__btn-dropdown">
-          <svg width="23" height="4" viewBox="0 0 23 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="23"
+            height="4"
+            viewBox="0 0 23 4"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <circle cx="2" cy="2" r="2" fill="#C4C4C4" />
             <circle cx="11.5" cy="2" r="2" fill="#C4C4C4" />
             <circle cx="21" cy="2" r="2" fill="#C4C4C4" />
           </svg>
         </button>
         <div class="track__dropdown">
-          ${
-            inPlaylist
-              ? `<button class="track__delete-btn">Удалить из плейлиста</button>`
-              : `<button class="track__add-btn">Добавить в плейлист</button>`
-          }
+          ${inPlaylist
+            ? `<button class="track__delete-btn">Удалить из плейлиста</button>`
+            : `<button class="track__add-btn">Добавить в плейлист</button>`}
         </div>
       </div>
     `;
@@ -43,7 +47,7 @@ export class SongMenu extends Component<SongMenuOptions> {
   }
 
   onClick() {
-    const { onMenuClick } = this.options;
+    const { onMenuClick, inPlaylist } = this.options;
     this.on("click", document, (e) => {
       const target = e.target;
       const dropdownTrigger = this.element.querySelector(
@@ -55,7 +59,7 @@ export class SongMenu extends Component<SongMenuOptions> {
       if (!(target instanceof Element)) return;
 
       if (target.closest(".track__dropdown button") === dropdownItem) {
-        onMenuClick();
+        onMenuClick(inPlaylist ? "remove" : "add");
         this.isOpen = false;
       } else if (target.closest(".track__btn-dropdown") === dropdownTrigger) {
         this.isOpen = this._isOpen ? false : true;

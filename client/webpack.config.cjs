@@ -79,6 +79,7 @@ const config = {
       core: path.resolve(__dirname, "src/ts/core"),
       presenters: path.resolve(__dirname, "src/ts/presenters"),
       styles: path.resolve(__dirname, "src/styles"),
+      services: path.resolve(__dirname, "src/ts/services"),
     },
   },
 };

@@ -1,1 +1,2 @@
-export * from "./RemoveSong";
+export * from "./RemoveFromPlaylist";
+export * from "./AddToPlaylist";

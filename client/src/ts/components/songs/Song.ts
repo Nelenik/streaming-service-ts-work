@@ -1,5 +1,5 @@
 import { Component, ComponentOptions } from "core";
-import { getSongDurStr, getDaysAgo } from "helpers";
+import { html, getSongDurStr, getDaysAgo } from "helpers";
 import { images, Song } from "mocks";
 
 interface SongOptions extends ComponentOptions {
@@ -14,12 +14,16 @@ export class SongComponent extends Component<SongOptions> {
     const trackDur = getSongDurStr(data.duration);
     const daysAgo = getDaysAgo(data.createdAt);
 
-    return /*html*/ `
+    return html`
       <li class="tracks__item flex">
         <div class="tracks__item__number">${num}</div>
-        <div class="tracks__item__name"><img class="track__img" src="${path}" alt="In Bloom">
+        <div class="tracks__item__name">
+          <img class="track__img" src="${path}" alt="In Bloom" />
           <div class="track__content">
-            <h3 class="track__name"><a class="track__name__link" href="#">${data.name}</a></h3><span class="track__author">${data.artist.name}</span>
+            <h3 class="track__name">
+              <a class="track__name__link" href="#">${data.name}</a>
+            </h3>
+            <span class="track__author">${data.artist.name}</span>
           </div>
         </div>
         <div class="tracks__item__albom">${data.album.name}</div>
