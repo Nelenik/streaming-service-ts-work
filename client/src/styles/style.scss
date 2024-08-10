@@ -1279,18 +1279,16 @@ body {
 }
 
 .playlists-modal__footer {
-  // width: 114px;
-  // height: 32px;
-  // padding: 20px;
   display: flex;
   flex-wrap: wrap;
+  // justify-content: space-around;
   gap: 10px;
 }
 
 .playlists-modal__btn {
   flex-grow: 1;
   font-size: 14px;
-  width: 114px;
+  max-width: 114px;
   height: 32px;
   padding: 10px;
   text-align: center;
@@ -1301,11 +1299,12 @@ body {
 .playlists-modal__close-btn {
   margin-left: auto;
   background: #AAAAAA;
+  // align-self: end;
 }
 
 .playlists-modal__confirm-btn {
   background: #E8E8E8;
-
+  // align-self: start;
 }
 
 @media (min-width: 1200px) {

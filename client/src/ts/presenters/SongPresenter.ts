@@ -1,4 +1,4 @@
-import { AddToPlaylist, RemoveFromPlaylist } from "components/modals";
+import { PlaylsistModal } from "components/modals";
 import { Like, SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
 import { Song } from "mocks";
@@ -49,19 +49,8 @@ export class SongPresenter extends Presenter {
 
   openModal(type: ModalType) {
     console.log(this.songData.id);
-    const close = Modal.instance.close.bind(Modal.instance);
-    switch (type) {
-      case "add": {
-        const addModal = new AddToPlaylist({ closeModal: close });
-        Modal.instance.open(addModal);
-        addModal.element.classList.add("show");
-        break;
-      }
-      case "remove": {
-        const removeModal = new RemoveFromPlaylist({ closeModal: close });
-        Modal.instance.open(removeModal);
-        removeModal.element.classList.add("show");
-      }
-    }
+    const modal = new PlaylsistModal({ type });
+    Modal.instance.open(modal);
+    modal.element.classList.add("show");
   }
 }

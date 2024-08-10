@@ -1,2 +1,1 @@
-export * from "./RemoveFromPlaylist";
-export * from "./AddToPlaylist";
+export * from "./PlaylistsModal";
