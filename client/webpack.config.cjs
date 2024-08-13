@@ -80,6 +80,7 @@ const config = {
       presenters: path.resolve(__dirname, "src/ts/presenters"),
       styles: path.resolve(__dirname, "src/styles"),
       services: path.resolve(__dirname, "src/ts/services"),
+      models: path.resolve(__dirname, "src/ts/models"),
     },
   },
 };

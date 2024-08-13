@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
@@ -17,7 +18,8 @@
       "core": ["src/ts/core"],
       "presenters": ["src/ts/presenters"],
       "styles" : ["src/styles"],
-      "services" : ["src/ts/services"]
+      "services" : ["src/ts/services"],
+      "models" : ["src/ts/models"]
     },
     "lib": ["ESNext", "DOM"]
   },

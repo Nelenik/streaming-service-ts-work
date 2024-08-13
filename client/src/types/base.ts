@@ -1,2 +1,69 @@
 export type InsertMethods = "append" | "prepend" | "before" | "after";
-// export type Place = Node | Element|HTMLElement
+
+export interface User {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface UserFull extends User {
+  playlists: Playlist[];
+  songLikes: Song[];
+}
+
+export interface Playlist {
+  id: number;
+  name: string;
+  createdAt: string;
+  user: User;
+  songs: Song[];
+}
+
+export type Playlists = Playlist[];
+
+export interface Song {
+  id: number;
+  name: string;
+  filename: string;
+  path: string;
+  image: string;
+  duration: number;
+  createdAt: string;
+  album: Album;
+  artist: Artist;
+  playlists: Playlists;
+  likes: User[];
+}
+
+export interface Album {
+  id: number;
+  name: string;
+  image: string;
+  createdAt: string;
+  songs: Song[];
+  artist: Artist;
+  likes: User[];
+}
+export interface Artist {
+  id: number;
+  name: string;
+  image: string;
+  createdAt: string;
+  albums: Album[];
+  likes: User[];
+}
+
+export interface Jwt {
+  access_token: string;
+}
+
+export interface Login {
+  username: string;
+  password: string;
+}
+
+export interface Signup extends Login {
+  firstName: string;
+  lastName: string;
+}

@@ -7,7 +7,7 @@ import { Modal } from "services";
 type ModalType = "add" | "remove";
 
 export class SongPresenter extends Presenter {
-  component: Component;
+  component!: Component;
 
   constructor(
     public songData: Song,
@@ -23,6 +23,7 @@ export class SongPresenter extends Presenter {
       data: this.songData,
       num: this.num,
     }).mount(".tracks__list", "append");
+    if (!this.component.element) return;
 
     //render like component
     const likeParent = this.component.element.querySelector(
@@ -51,6 +52,6 @@ export class SongPresenter extends Presenter {
     console.log(this.songData.id);
     const modal = new PlaylsistModal({ type });
     Modal.instance.open(modal);
-    modal.element.classList.add("show");
+    modal.element?.classList.add("show");
   }
 }

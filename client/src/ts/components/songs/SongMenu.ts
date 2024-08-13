@@ -36,7 +36,8 @@ export class SongMenu extends Component<SongMenuOptions> {
 
   set isOpen(val: boolean) {
     this._isOpen = val;
-    const menu = this.element.querySelector(".track__dropdown");
+    const menu = this.element?.querySelector(".track__dropdown");
+    if (!menu) return;
     if (val) this.openDropdown(menu);
     else this.closeDropdown(menu);
   }
@@ -50,10 +51,10 @@ export class SongMenu extends Component<SongMenuOptions> {
     const { onMenuClick, inPlaylist } = this.options;
     this.on("click", document, (e) => {
       const target = e.target;
-      const dropdownTrigger = this.element.querySelector(
+      const dropdownTrigger = this.element?.querySelector(
         ".track__btn-dropdown"
       );
-      const dropdownItem = this.element.querySelector(
+      const dropdownItem = this.element?.querySelector(
         ".track__dropdown button"
       );
       if (!(target instanceof Element)) return;
@@ -63,20 +64,21 @@ export class SongMenu extends Component<SongMenuOptions> {
         this.isOpen = false;
       } else if (target.closest(".track__btn-dropdown") === dropdownTrigger) {
         this.isOpen = this._isOpen ? false : true;
-      } else if (this._isOpen && !this.element.contains(target)) {
+      } else if (this._isOpen && !this.element?.contains(target)) {
         console.log("outside");
         this.isOpen = false;
       }
     });
   }
   onEsc(): void {
-    this.on("keyup", document, (e: KeyboardEvent) => {
+    this.on("keyup", document, (e: KeyboardEventInit) => {
       if (e.code !== "Escape") return;
       this.isOpen = false;
     });
   }
   openDropdown(menu: Element): void {
-    this.closeDropdown(document.querySelector(".dropdown--active"));
+    const opened = document.querySelector(".dropdown--active");
+    if (opened) this.closeDropdown(opened);
     menu.classList.add("dropdown--active");
   }
 

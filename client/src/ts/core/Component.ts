@@ -10,7 +10,7 @@ export interface ComponentOptions {
 export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   private _element: HTMLElement | null = null;
 
-  constructor(protected _options: T = null) {
+  constructor(protected _options: T = {} as T) {
     this.getElement();
   }
 
@@ -48,24 +48,31 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
 
   setHandlers(): void {}
 
-  mount(selectorOrElement: string | Element, method: InsertMethods): Component {
-    const container = getContainer(selectorOrElement);
-    render(container, this, method);
+  mount(
+    selectorOrElement: null | string | Element,
+    method: InsertMethods
+  ): Component {
+    try {
+      const container = getContainer(selectorOrElement);
+      render(container, this, method);
+    } catch (err) {
+      console.error(`Error mounting the component: ${err}`);
+    }
     return this;
   }
 
   on(
     eventType: string,
     element: EventTarget,
-    cb: EventListenerOrEventListenerObject = NOOP
+    listener: EventListenerOrEventListenerObject
   ) {
-    element.addEventListener(eventType, cb);
+    element.addEventListener(eventType, listener);
   }
   off(
     eventType: string,
-    element: Element,
-    cb: EventListenerOrEventListenerObject = NOOP
+    element: EventTarget,
+    listener: EventListenerOrEventListenerObject = NOOP
   ) {
-    element.removeEventListener(eventType, cb);
+    element.removeEventListener(eventType, listener);
   }
 }
