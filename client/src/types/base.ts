@@ -3,8 +3,8 @@ export type InsertMethods = "append" | "prepend" | "before" | "after";
 export interface User {
   id: number;
   username: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface UserFull extends User {
@@ -18,6 +18,10 @@ export interface Playlist {
   createdAt: string;
   user: User;
   songs: Song[];
+}
+
+export interface PlaylistName {
+  name: string;
 }
 
 export type Playlists = Playlist[];

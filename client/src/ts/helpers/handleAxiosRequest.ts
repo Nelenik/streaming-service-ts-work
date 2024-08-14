@@ -1,4 +1,4 @@
-export async function handleRequest<T>(
+export async function handleAxiosRequest<T>(
   request: () => Promise<{ data: T }>
 ): Promise<T> {
   try {

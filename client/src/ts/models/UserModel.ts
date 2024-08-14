@@ -1,3 +1,4 @@
+import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { Playlists, Song, User, UserFull } from "types";
 class UserModel {
@@ -9,29 +10,27 @@ class UserModel {
     );
     this.currUsername = username;
   }
-  public async getUser(): Promise<User> {
+  private async getUsers(): Promise<User[]> {
+    return handleAxiosRequest(() => Api.get("users"));
+  }
+
+  public async getUser(): Promise<User | undefined> {
     try {
-      const { data } = await Api.get("users");
-      return data.find((user: User) => user.username === this.currUsername);
+      const data = await this.getUsers();
+      const currUser = data.find(
+        (user: User) => user.username === this.currUsername
+      );
+      if (currUser) return Promise.resolve(currUser);
     } catch (err) {
       return Promise.reject(err);
     }
   }
+
   public async getPlaylists(): Promise<Playlists> {
-    try {
-      const { data } = await Api.get(`users/playlists`);
-      return data;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    return handleAxiosRequest(() => Api.get(`users/playlists`));
   }
   public async getSongLikes(): Promise<Song[]> {
-    try {
-      const { data } = await Api.get(`users/likes`);
-      return data;
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    return handleAxiosRequest(() => Api.get(`users/likes`));
   }
 
   public async getUserFull(): Promise<UserFull> {
@@ -41,6 +40,9 @@ class UserModel {
         this.getPlaylists(),
         this.getSongLikes(),
       ]);
+      if (!userBase) {
+        throw new Error("User not found");
+      }
       return { ...userBase, playlists, songLikes };
     } catch (err) {
       return Promise.reject(err);

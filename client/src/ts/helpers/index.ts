@@ -4,4 +4,4 @@ export * from "./getDaysAgo";
 export * from "./deepEqual";
 export * from "./getContainer";
 export * from "./noop";
-export * from "./handleRequest";
+export * from "./handleAxiosRequest";
