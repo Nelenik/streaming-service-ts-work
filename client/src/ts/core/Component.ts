@@ -30,7 +30,7 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
     return this._element;
   }
 
-  getElement(): HTMLElement {
+  getElement(): Element {
     const newElement = createElement(this.getTemplate());
     if (this._element === null) {
       this._element = newElement;

@@ -7,7 +7,7 @@ import { Modal } from "services";
 type ModalType = "add" | "remove";
 
 export class SongPresenter extends Presenter {
-  component!: Component;
+  songComponent!: Component;
 
   constructor(
     public songData: Song,
@@ -19,14 +19,14 @@ export class SongPresenter extends Presenter {
   }
 
   init() {
-    this.component = new SongComponent({
+    this.songComponent = new SongComponent({
       data: this.songData,
       num: this.num,
     }).mount(".tracks__list", "append");
-    if (!this.component.element) return;
+    if (!this.songComponent.element) return;
 
     //render like component
-    const likeParent = this.component.element.querySelector(
+    const likeParent = this.songComponent.element.querySelector(
       ".tracks__item__data"
     );
     new Like({
@@ -38,7 +38,7 @@ export class SongPresenter extends Presenter {
     new SongMenu({
       inPlaylist: true,
       onMenuClick: this.openModal.bind(this),
-    }).mount(this.component.element, "append");
+    }).mount(this.songComponent.element, "append");
   }
 
   likeHandler(component: Component) {

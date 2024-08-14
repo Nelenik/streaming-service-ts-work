@@ -1,9 +1,14 @@
-import { Component } from "core";
+import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
 import userImg from "img/user.jpg";
 
-export class Profile extends Component {
+interface ProfileOptions extends ComponentOptions {
+  username: string;
+}
+
+export class Profile extends Component<ProfileOptions> {
   getTemplate(): string {
+    const { username } = this.options;
     return html`
       <button class="header__user">
         <img
@@ -11,7 +16,7 @@ export class Profile extends Component {
           src=${userImg}
           alt="Изображение пользователя"
         />
-        <span class="header__user__text">Tatiana L.</span>
+        <span class="header__user__text">${username}</span>
         <svg
           class="header__user__svg"
           width="6"

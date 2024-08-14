@@ -1,8 +1,8 @@
 import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { Playlists, Song, User, UserFull } from "types";
-class UserModel {
-  currUsername: string;
+export class UserModel {
+  readonly currUsername: string;
 
   constructor() {
     const { username } = JSON.parse(
@@ -14,13 +14,14 @@ class UserModel {
     return handleAxiosRequest(() => Api.get("users"));
   }
 
-  public async getUser(): Promise<User | undefined> {
+  public async getUser(): Promise<User> {
     try {
       const data = await this.getUsers();
       const currUser = data.find(
         (user: User) => user.username === this.currUsername
       );
       if (currUser) return Promise.resolve(currUser);
+      else throw new Error("User not found");
     } catch (err) {
       return Promise.reject(err);
     }
@@ -40,9 +41,6 @@ class UserModel {
         this.getPlaylists(),
         this.getSongLikes(),
       ]);
-      if (!userBase) {
-        throw new Error("User not found");
-      }
       return { ...userBase, playlists, songLikes };
     } catch (err) {
       return Promise.reject(err);

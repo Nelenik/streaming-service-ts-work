@@ -3,7 +3,7 @@ import { getContainer } from "helpers";
 
 export class Modal {
   private _place: Element = document.body;
-  private openedComponent: Component = null;
+  private openedComponent: Component | null = null;
   static instance = new Modal();
 
   set place(selectorOrEl: string | Element) {
@@ -21,7 +21,7 @@ export class Modal {
 
   close() {
     if (this.openedComponent) {
-      this.openedComponent.element.remove();
+      this.openedComponent.element?.remove();
       this.openedComponent = null;
     }
   }

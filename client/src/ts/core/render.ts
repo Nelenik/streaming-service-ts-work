@@ -25,9 +25,10 @@ export const render: Render = (container, component, method = "append") => {
     container instanceof HTMLElement &&
     typeof container[method] === "function"
   ) {
-    component.forEach((componentInst: Component) =>
-      container[method](componentInst.element)
-    );
+    component.forEach((componentInst: Component) => {
+      if (componentInst.element instanceof Node)
+        container[method](componentInst.element);
+    });
   } else {
     throw new Error(
       `Method "${method}" is not a valid function on the container.`

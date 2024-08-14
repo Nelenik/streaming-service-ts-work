@@ -18,7 +18,7 @@ interface PlaylistActionsOpts {
   songId?: number;
 }
 
-class PlaylistModel {
+export class PlaylistModel {
   private async addNewPlaylist(body: PlaylistName): Promise<Playlist> {
     return handleAxiosRequest(() => Api.post("playlists", body));
   }
@@ -93,4 +93,4 @@ class PlaylistModel {
   }
 }
 
-export const playlstApi = new PlaylistModel();
+export const playlistApi = new PlaylistModel();

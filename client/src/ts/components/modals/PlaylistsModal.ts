@@ -133,6 +133,7 @@ export class PlaylsistModal extends Component<PlaylsistModalOptions> {
 
   onClick() {
     // const { onAdd, onRemove } = this.options;
+    if (!this.element) return;
     this.on("click", this.element, (e) => {
       const target = e.target;
       if (!(target instanceof Element)) return;
@@ -146,14 +147,14 @@ export class PlaylsistModal extends Component<PlaylsistModalOptions> {
   }
 
   onEsc(): void {
-    this.on("keyup", document, (e: KeyboardEvent) => {
+    this.on("keyup", document, (e: KeyboardEventInit) => {
       if (e.code !== "Escape") return;
       this.close();
     });
   }
 
   close() {
-    this.element.classList.remove("show");
+    this.element?.classList.remove("show");
     setTimeout(Modal.instance.close, 500);
   }
 }

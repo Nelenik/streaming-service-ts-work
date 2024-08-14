@@ -1,7 +1,12 @@
-import { Component } from "core";
+import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
+import { Playlist, Playlists } from "types";
 
-export class Aside extends Component {
+interface AsideOptions extends ComponentOptions {
+  userPlaylists: Playlists;
+}
+
+export class Aside extends Component<AsideOptions> {
   getTemplate(): string {
     return html`
       <aside class="aside">
@@ -35,7 +40,7 @@ export class Aside extends Component {
             <li class="aside__item">
               <button
                 class="aside__btn aside__tabs-btn aside__btn-active"
-                data-path="tracks"
+                data-path="songs"
               >
                 <svg
                   width="25"
@@ -96,33 +101,24 @@ export class Aside extends Component {
                 <span class="aside__btn__text">Плейлисты</span>
               </button>
             </li>
-            <li class="aside__item">
-              <button class="aside__btn">Любимые песни</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #1</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #2</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #3</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #4</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #5</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #6</button>
-            </li>
-            <li class="aside__item">
-              <button class="aside__btn">Плейлист #7</button>
-            </li>
+            ${this.getPlaylistsCtrls()}
           </ul>
         </nav>
       </aside>
     `;
+  }
+  getPlaylistsCtrls() {
+    const { userPlaylists } = this.options;
+    return userPlaylists
+      .map((playlist: Playlist) => {
+        return html`
+          <li class="aside__item">
+            <button class="aside__btn" data-list-id="${playlist.id}">
+              ${playlist.name}
+            </button>
+          </li>
+        `;
+      })
+      .join(" ");
   }
 }

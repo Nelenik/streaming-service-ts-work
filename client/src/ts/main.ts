@@ -2,18 +2,17 @@ import { Footer } from "components/footer";
 import "../index.html";
 import "../styles/style.scss";
 import { HeaderPresenter, LayoutPresenter } from "presenters";
-import { authApi, userApi } from "models";
+import { authApi, userApi, songApi, playlistApi } from "models";
 import { Login } from "types";
 
-new HeaderPresenter();
-new LayoutPresenter();
-new Footer().mount("#app", "append");
-
 const loginData: Login = { username: "HelNek", password: "HelNek" };
-
-authApi.login(loginData).then((res) => {
+authApi.login(loginData).then(async (res) => {
   localStorage.setItem("PlayServiceAuth", JSON.stringify(res));
   console.log("authorized");
-});
 
-userApi.getUserFull().then((res) => console.log(res));
+  await new HeaderPresenter({ userApi }).init();
+
+  await new LayoutPresenter({ userApi, songApi, playlistApi }).init();
+
+  new Footer().mount("#app", "append");
+});

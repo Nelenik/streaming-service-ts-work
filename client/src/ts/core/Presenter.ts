@@ -1,20 +1,20 @@
-import { Component } from "./Component";
+// import { Component } from "./Component";
 
-interface Models {
-  [key: string]: unknown;
-}
+// interface Models {
+//   [key: string]: unknown;
+// }
 
-interface Views {
-  [key: string]: unknown;
-}
+// interface Views {
+//   [key: string]: unknown;
+// }
 
 export abstract class Presenter {
-  public component!: Component;
+  // // public component!: Component;
 
-  constructor(
-    private models: Models = {},
-    private views: Views = {}
-  ) {}
+  // constructor(
+  //   private models: Models = {},
+  //   private views: Views = {}
+  // ) {}
 
   abstract init(): void;
 }

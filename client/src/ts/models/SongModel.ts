@@ -9,7 +9,7 @@ enum SongActions {
   UNLIKE = "UNLIKE",
 }
 
-class SongModel {
+export class SongModel {
   private async getAllSongs(): Promise<Song[]> {
     return handleAxiosRequest(() => Api.get("songs"));
   }

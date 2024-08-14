@@ -3,6 +3,7 @@ import { html } from "helpers";
 
 export class Header extends Component {
   getTemplate(): string {
+    console.log("render header");
     return html`
       <header class="header flex">
         <a class="header__logo" href="/">
