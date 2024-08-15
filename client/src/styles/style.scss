@@ -805,6 +805,10 @@ body {
 
 .tabs-content {
   display: none;
+
+  &--shown {
+    display: block;
+  }
 }
 
 .title__h2 {
@@ -961,10 +965,6 @@ body {
 
 .data__text {
   margin-right: auto;
-}
-
-.section.section--active {
-  display: block;
 }
 
 .tracks__item__drop {

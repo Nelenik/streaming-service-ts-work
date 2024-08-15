@@ -2,7 +2,7 @@ import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { Song } from "types";
 
-enum SongActions {
+export enum SongActions {
   FETCH_ALL = "FETCH_ALL",
   FETCH_ONE = "FETCH_ONE",
   LIKE = "LIKE",

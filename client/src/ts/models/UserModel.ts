@@ -1,6 +1,6 @@
 import { handleAxiosRequest } from "helpers";
 import Api from "services";
-import { Playlists, Song, User, UserFull } from "types";
+import { Playlists, User, UserFull, UserLikes } from "types";
 export class UserModel {
   readonly currUsername: string;
 
@@ -30,7 +30,7 @@ export class UserModel {
   public async getPlaylists(): Promise<Playlists> {
     return handleAxiosRequest(() => Api.get(`users/playlists`));
   }
-  public async getSongLikes(): Promise<Song[]> {
+  public async getUserLikes(): Promise<UserLikes> {
     return handleAxiosRequest(() => Api.get(`users/likes`));
   }
 
@@ -39,9 +39,9 @@ export class UserModel {
       const [userBase, playlists, songLikes] = await Promise.all([
         this.getUser(),
         this.getPlaylists(),
-        this.getSongLikes(),
+        this.getUserLikes(),
       ]);
-      return { ...userBase, playlists, songLikes };
+      return { ...userBase, playlists, ...songLikes };
     } catch (err) {
       return Promise.reject(err);
     }

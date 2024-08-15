@@ -1,8 +1,8 @@
 import { PlaylsistModal } from "components/modals";
 import { Like, SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
-import { Song } from "mocks";
 import { Modal } from "services";
+import { Song } from "types";
 
 type ModalType = "add" | "remove";
 

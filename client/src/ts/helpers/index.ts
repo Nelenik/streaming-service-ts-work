@@ -5,3 +5,4 @@ export * from "./deepEqual";
 export * from "./getContainer";
 export * from "./noop";
 export * from "./handleAxiosRequest";
+export * from "./checkObjectProps";

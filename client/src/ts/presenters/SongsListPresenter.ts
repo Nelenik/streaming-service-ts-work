@@ -1,18 +1,58 @@
 import { SongsList } from "components/songs";
-import { Presenter } from "core";
-import { songsList } from "mocks";
+import { Component, Presenter } from "core";
 import { SongPresenter } from "./SongPresenter";
-
-interface SongsListPresenterModels {}
+import { isSongList, ListType, Models, Song } from "types";
+import { PlaylistActions, SongActions } from "models";
 
 export class SongsListPresenter extends Presenter {
-  constructor(private models: SongsListPresenterModels) {
+  songsListComponent!: Component;
+  songsList: Song[] = [];
+  playlistId: number | null = null;
+
+  constructor(private models: Models) {
     super();
   }
   init() {
-    new SongsList().mount(".main", "append");
-    songsList.forEach((song, i) => {
-      new SongPresenter(song, i, true);
+    this.songsListComponent = new SongsList().mount(".main", "append");
+  }
+
+  mountSongs() {
+    this.songsListComponent.element
+      ?.querySelector(".tracks__list")
+      ?.replaceChildren();
+
+    this.songsList.forEach((song, i) => {
+      new SongPresenter(song, i + 1, Boolean(this.playlistId));
     });
+  }
+
+  async getActualList(listType: ListType, playlistId: number | null) {
+    this.playlistId = playlistId;
+
+    const { userApi, songApi, playlistApi } = this.models;
+    switch (listType) {
+      case "all": {
+        const result = await songApi.handleSongsAction(SongActions.FETCH_ALL);
+        if (isSongList(result)) {
+          this.songsList = result;
+        }
+        break;
+      }
+      case "favourites": {
+        this.songsList = (await userApi.getUserLikes()).songLikes;
+        break;
+      }
+      case "playlist": {
+        if (!playlistId) break;
+
+        const result = await playlistApi.handlePlaylistsAction(
+          PlaylistActions.FETCH_SONGS,
+          { playlistId }
+        );
+        if (isSongList(result)) {
+          this.songsList = result;
+        }
+      }
+    }
   }
 }

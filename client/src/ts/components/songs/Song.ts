@@ -1,6 +1,7 @@
 import { Component, ComponentOptions } from "core";
 import { html, getSongDurStr, getDaysAgo } from "helpers";
-import { images, Song } from "mocks";
+import { images } from "mocks";
+import { Song } from "types";
 
 interface SongOptions extends ComponentOptions {
   data: Song;

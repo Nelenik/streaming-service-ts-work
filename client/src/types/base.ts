@@ -1,3 +1,5 @@
+import { PlaylistModel, SongModel, UserModel } from "models";
+
 export type InsertMethods = "append" | "prepend" | "before" | "after";
 
 export interface User {
@@ -7,9 +9,14 @@ export interface User {
   lastName?: string;
 }
 
-export interface UserFull extends User {
+export interface UserFull extends User, UserLikes {
   playlists: Playlist[];
+}
+
+export interface UserLikes {
   songLikes: Song[];
+  albumLikes: Album[];
+  artistLikes: Artist[];
 }
 
 export interface Playlist {
@@ -71,3 +78,11 @@ export interface Signup extends Login {
   firstName: string;
   lastName: string;
 }
+
+export interface Models {
+  userApi: UserModel;
+  songApi: SongModel;
+  playlistApi: PlaylistModel;
+}
+
+export type ListType = "all" | "favourites" | "playlist";

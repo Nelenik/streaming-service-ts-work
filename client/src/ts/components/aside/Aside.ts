@@ -4,6 +4,7 @@ import { Playlist, Playlists } from "types";
 
 interface AsideOptions extends ComponentOptions {
   userPlaylists: Playlists;
+  onSwitch: (e: Event) => void;
 }
 
 export class Aside extends Component<AsideOptions> {
@@ -40,6 +41,7 @@ export class Aside extends Component<AsideOptions> {
             <li class="aside__item">
               <button
                 class="aside__btn aside__tabs-btn aside__btn-active"
+                data-list="all"
                 data-path="songs"
               >
                 <svg
@@ -101,6 +103,15 @@ export class Aside extends Component<AsideOptions> {
                 <span class="aside__btn__text">Плейлисты</span>
               </button>
             </li>
+            <li class="aside__item">
+              <button
+                class="aside__btn"
+                data-path="songs"
+                data-list="favourites"
+              >
+                Любимые песни
+              </button>
+            </li>
             ${this.getPlaylistsCtrls()}
           </ul>
         </nav>
@@ -113,12 +124,22 @@ export class Aside extends Component<AsideOptions> {
       .map((playlist: Playlist) => {
         return html`
           <li class="aside__item">
-            <button class="aside__btn" data-list-id="${playlist.id}">
+            <button
+              class="aside__btn"
+              data-path="songs"
+              data-list="playlist"
+              data-list-id="${playlist.id}"
+            >
               ${playlist.name}
             </button>
           </li>
         `;
       })
       .join(" ");
+  }
+
+  setHandlers(): void {
+    if (!this.element) return;
+    this.on("click", this.element, this.options.onSwitch);
   }
 }

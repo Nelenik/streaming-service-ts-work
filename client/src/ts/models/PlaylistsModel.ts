@@ -2,7 +2,7 @@ import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { PlaylistName, Playlist, Song } from "types";
 
-enum PlaylistActions {
+export enum PlaylistActions {
   ADD_NEW = "ADD_NEW",
   RENAME = "RENAME",
   DELETE = "DELETE",
@@ -12,7 +12,7 @@ enum PlaylistActions {
   REMOVE_SONG = "REMOVE_SONG",
 }
 
-interface PlaylistActionsOpts {
+export interface PlaylistActionsOpts {
   body?: PlaylistName;
   playlistId?: number;
   songId?: number;
