@@ -1,6 +1,5 @@
 import { Component, ComponentOptions } from "core";
 import { html, getSongDurStr, getDaysAgo } from "helpers";
-import { images } from "mocks";
 import { Song } from "types";
 
 interface SongOptions extends ComponentOptions {
@@ -11,7 +10,6 @@ interface SongOptions extends ComponentOptions {
 export class SongComponent extends Component<SongOptions> {
   getTemplate(): string {
     const { data, num } = this.options;
-    const path = images.find((el: string) => el.includes(data.image));
     const trackDur = getSongDurStr(data.duration);
     const daysAgo = getDaysAgo(data.createdAt);
 
@@ -19,7 +17,7 @@ export class SongComponent extends Component<SongOptions> {
       <li class="tracks__item flex">
         <div class="tracks__item__number">${num}</div>
         <div class="tracks__item__name">
-          <img class="track__img" src="${path}" alt="In Bloom" />
+          <img class="track__img" src="${data.image}" alt="In Bloom" />
           <div class="track__content">
             <h3 class="track__name">
               <a class="track__name__link" href="#">${data.name}</a>

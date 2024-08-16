@@ -21,12 +21,14 @@ const config = {
     path: path.resolve(__dirname, "dist"),
     filename: `js/${filename("[name]", ".js")}`,
     clean: true,
+    publicPath: "/",
   },
   devServer: {
     open: true,
     hot: false,
     liveReload: true,
     host: "localhost",
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({

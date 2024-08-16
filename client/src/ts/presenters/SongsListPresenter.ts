@@ -11,6 +11,7 @@ export class SongsListPresenter extends Presenter {
 
   constructor(private models: Models) {
     super();
+    console.log("songlist presenter initialized");
   }
   init() {
     this.songsListComponent = new SongsList().mount(".main", "append");

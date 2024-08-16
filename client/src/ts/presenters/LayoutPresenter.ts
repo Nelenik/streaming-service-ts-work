@@ -4,7 +4,7 @@ import { Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
 // import { EventEmitter } from "services";
-import { isListType, ListType } from "types";
+import { ListType } from "types";
 
 interface LayoutPresenterModels {
   userApi: UserModel;
@@ -13,8 +13,8 @@ interface LayoutPresenterModels {
 }
 
 export class LayoutPresenter extends Presenter {
-  songsListPresenterInstance!: SongsListPresenter;
-  playlistPresenterInstance!: PlaylistPresenter;
+  songsListPresInst: SongsListPresenter | null = null;
+  playlistPresInst: PlaylistPresenter | null = null;
 
   constructor(private models: LayoutPresenterModels) {
     super();
@@ -26,41 +26,21 @@ export class LayoutPresenter extends Presenter {
     console.log(userPlaylists);
     new Layout().mount("#app", "append");
 
-    new Aside({ userPlaylists, onSwitch: this.switchScreens.bind(this) }).mount(
-      ".content-wrap",
-      "prepend"
-    );
-
-    this.songsListPresenterInstance = new SongsListPresenter(this.models);
-    this.songsListPresenterInstance.init();
-    await this.drawSongsList("all");
-
-    this.playlistPresenterInstance = new PlaylistPresenter();
+    new Aside({ userPlaylists }).mount(".content-wrap", "prepend");
   }
 
   async drawSongsList(listType: ListType, playlistId: number | null = null) {
-    await this.songsListPresenterInstance.getActualList(listType, playlistId);
-    this.songsListPresenterInstance.mountSongs();
+    if (!this.songsListPresInst) {
+      this.songsListPresInst = new SongsListPresenter(this.models);
+      this.songsListPresInst.init();
+    }
+    await this.songsListPresInst.getActualList(listType, playlistId);
+    this.songsListPresInst.mountSongs();
   }
 
-  async switchScreens(e: Event) {
-    const target = (e.target as HTMLElement)?.closest<HTMLElement>(
-      ".aside__btn"
-    );
-    if (!target) return;
-    const showClassName = "tabs-content--shown";
-    document
-      .querySelector(`.${showClassName}`)
-      ?.classList.remove(showClassName);
-    const path = target.dataset.path;
-    console.log("path", path);
-    document
-      .querySelector(`[data-target="${path}"]`)
-      ?.classList.add(showClassName);
-
-    const listType = target.dataset.list;
-    const playlistId = Number(target.dataset.listId) || null;
-    if (!isListType(listType)) return;
-    await this.drawSongsList(listType, playlistId);
+  drawPlaylists() {
+    if (!this.playlistPresInst) {
+      this.playlistPresInst = new PlaylistPresenter();
+    }
   }
 }

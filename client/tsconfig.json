@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "ESNext",
-    "target":"ES6",
+    "target":"ES2017",
     "allowJs": true,
     "moduleResolution": "Bundler",
     "sourceMap": true,

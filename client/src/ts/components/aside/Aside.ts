@@ -1,10 +1,11 @@
 import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
+import { router } from "services";
 import { Playlist, Playlists } from "types";
 
 interface AsideOptions extends ComponentOptions {
   userPlaylists: Playlists;
-  onSwitch: (e: Event) => void;
+  // onSwitch: (e: Event) => void;
 }
 
 export class Aside extends Component<AsideOptions> {
@@ -140,6 +141,21 @@ export class Aside extends Component<AsideOptions> {
 
   setHandlers(): void {
     if (!this.element) return;
-    this.on("click", this.element, this.options.onSwitch);
+
+    this.on("click", this.element, (e: Event) => {
+      const target = (e.target as HTMLElement)?.closest<HTMLElement>(
+        ".aside__btn"
+      );
+      if (!target) return;
+      if (target.dataset.path === "playlists") {
+        router.navigate("/playlists");
+      } else {
+        const queryStr = target.dataset.listId
+          ? `?id=${target.dataset.listId}`
+          : "";
+        const path = `/${target.dataset.path}/${target.dataset.list}${queryStr}`;
+        router.navigate(path);
+      }
+    });
   }
 }
