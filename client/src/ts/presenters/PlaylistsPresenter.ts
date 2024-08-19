@@ -4,9 +4,10 @@ import { playlists } from "mocks";
 
 export class PlaylistPresenter extends Presenter {
   public playlistsComponent!: Component;
+
   constructor() {
     super();
-    this.init();
+    console.log("playlist presenter initialized");
   }
 
   init() {

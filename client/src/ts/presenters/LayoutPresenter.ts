@@ -1,6 +1,6 @@
 import { Aside } from "components/aside";
 import { Layout } from "components/layout";
-import { Presenter } from "core";
+import { Component, Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
 // import { EventEmitter } from "services";
@@ -13,6 +13,7 @@ interface LayoutPresenterModels {
 }
 
 export class LayoutPresenter extends Presenter {
+  layoutComponent!: Component;
   songsListPresInst: SongsListPresenter | null = null;
   playlistPresInst: PlaylistPresenter | null = null;
 
@@ -23,24 +24,31 @@ export class LayoutPresenter extends Presenter {
   async init() {
     const { userApi } = this.models;
     const userPlaylists = await userApi.getPlaylists();
-    console.log(userPlaylists);
-    new Layout().mount("#app", "append");
+    this.layoutComponent = new Layout().mount("#app", "append");
 
     new Aside({ userPlaylists }).mount(".content-wrap", "prepend");
   }
 
+  cleanMainBlock() {
+    const main = this.layoutComponent.element?.querySelector(".main");
+    main?.replaceChildren();
+  }
+
   async drawSongsList(listType: ListType, playlistId: number | null = null) {
+    this.cleanMainBlock();
     if (!this.songsListPresInst) {
       this.songsListPresInst = new SongsListPresenter(this.models);
-      this.songsListPresInst.init();
     }
+    this.songsListPresInst.init();
     await this.songsListPresInst.getActualList(listType, playlistId);
     this.songsListPresInst.mountSongs();
   }
 
   drawPlaylists() {
+    this.cleanMainBlock();
     if (!this.playlistPresInst) {
       this.playlistPresInst = new PlaylistPresenter();
     }
+    this.playlistPresInst.init();
   }
 }
