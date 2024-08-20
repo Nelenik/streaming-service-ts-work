@@ -13,15 +13,11 @@ export class SongsListPresenter extends Presenter {
     super();
     console.log("song list presenter initialized");
   }
-  init() {
+  async init() {
     this.songsListComponent = new SongsList().mount(".main", "append");
   }
 
   mountSongs() {
-    this.songsListComponent.element
-      ?.querySelector(".tracks__list")
-      ?.replaceChildren();
-
     this.songsList.forEach((song, i) => {
       new SongPresenter(song, i + 1, Boolean(this.playlistId));
     });

@@ -44,11 +44,15 @@ export class LayoutPresenter extends Presenter {
     this.songsListPresInst.mountSongs();
   }
 
-  drawPlaylists() {
+  async drawPlaylists() {
     this.cleanMainBlock();
     if (!this.playlistPresInst) {
-      this.playlistPresInst = new PlaylistPresenter();
+      this.playlistPresInst = new PlaylistPresenter({
+        userApi: this.models.userApi,
+      });
     }
     this.playlistPresInst.init();
+    await this.playlistPresInst.getActualPlaylists();
+    this.playlistPresInst.mountPlaylists();
   }
 }

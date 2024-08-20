@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface UserFull extends User, UserLikes {
-  playlists: Playlist[];
+  playlists: Playlists;
 }
 
 export interface UserLikes {

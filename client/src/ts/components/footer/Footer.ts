@@ -1,6 +1,6 @@
 import { Component } from "core";
 import { html } from "helpers";
-import track1Img from "img/tracks(1).jpg";
+import track1Img from "img/playlists(1).jpg";
 
 export class Footer extends Component {
   getTemplate(): string {
