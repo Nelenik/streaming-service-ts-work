@@ -19,7 +19,7 @@ export class SongsListPresenter extends Presenter {
 
   mountSongs() {
     this.songsList.forEach((song, i) => {
-      new SongPresenter(song, i + 1, Boolean(this.playlistId));
+      new SongPresenter(song, i + 1, Boolean(this.playlistId), this.models);
     });
   }
 

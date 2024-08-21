@@ -27,6 +27,12 @@ export class LayoutPresenter extends Presenter {
     this.layoutComponent = new Layout().mount("#app", "append");
 
     new Aside({ userPlaylists }).mount(".content-wrap", "prepend");
+
+    //rerender of the favorites on unlike
+    window.addEventListener("rerenderFavorites", async (e: CustomEventInit) => {
+      const { listType, id } = e.detail;
+      await this.drawSongsList(listType, id);
+    });
   }
 
   cleanMainBlock() {

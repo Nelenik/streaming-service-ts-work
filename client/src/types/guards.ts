@@ -10,6 +10,10 @@ export function isSongList(list: unknown): list is Song[] {
   );
 }
 
+export function isSong(song: unknown): song is Song {
+  return checkObjectProps(song, ["duration", "album"]);
+}
+
 export function isListType(val: string | undefined): val is ListType {
   return val === "all" || val === "playlist" || val === "favourites";
 }

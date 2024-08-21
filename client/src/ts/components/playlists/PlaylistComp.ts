@@ -38,17 +38,4 @@ export class PlaylistComp extends Component<PlaylistOptions> {
       </li>
     `;
   }
-
-  // setHandlers(): void {
-  //   this.onLinkClick();
-  // }
-
-  // onLinkClick() {
-  //   const link = this.element?.querySelector(".playlist__h3__link");
-  //   if (!link || !(link instanceof HTMLLinkElement)) return;
-  //   this.on("click", link, (e: Event) => {
-  //     e.preventDefault();
-  //     router.navigate(link.href);
-  //   });
-  // }
 }
