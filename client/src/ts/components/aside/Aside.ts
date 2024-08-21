@@ -153,7 +153,7 @@ export class Aside extends Component<AsideOptions> {
         const queryStr = target.dataset.listId
           ? `?id=${target.dataset.listId}`
           : "";
-        const path = `/${target.dataset.path}/${target.dataset.list}${queryStr}`;
+        const path = `${target.dataset.path}/${target.dataset.list}${queryStr}`;
         router.navigate(path);
       }
     });

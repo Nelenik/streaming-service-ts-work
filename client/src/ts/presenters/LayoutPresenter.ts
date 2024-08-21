@@ -53,6 +53,6 @@ export class LayoutPresenter extends Presenter {
     }
     this.playlistPresInst.init();
     await this.playlistPresInst.getActualPlaylists();
-    this.playlistPresInst.mountPlaylists();
+    await this.playlistPresInst.mountPlaylists();
   }
 }

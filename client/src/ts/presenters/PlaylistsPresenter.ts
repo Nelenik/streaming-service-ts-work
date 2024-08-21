@@ -1,7 +1,7 @@
 import { PlaylistComp, PlaylistsList } from "components/playlists";
 import { Component, Presenter } from "core";
 // import { playlists } from "mocks";
-import { Models, Playlists, Playlist } from "types";
+import { Models, Playlists } from "types";
 import { defImages } from "models";
 import { ImageService } from "services";
 
@@ -18,9 +18,6 @@ export class PlaylistPresenter extends Presenter {
 
   init() {
     this.playlistsComponent = new PlaylistsList().mount(".main", "append");
-    // playlists.forEach((playlist) => {
-    //   new PlaylistComp({ data: playlist }).mount(".playlist__list", "append");
-    // });
   }
 
   async getActualPlaylists() {
@@ -28,19 +25,19 @@ export class PlaylistPresenter extends Presenter {
     this.playlistsList = await userApi.getPlaylists();
   }
 
-  mountPlaylists() {
-    this.playlistsList.forEach(async (playlist: Playlist) => {
-      const songsCount = playlist.songs.length;
-      const cover = songsCount
-        ? await ImageService.instance.invokeUrl(playlist.songs[0].image)
-        : this.getRandomImg(8);
+  async mountPlaylists() {
+    for (const playlist of this.playlistsList) {
+      const result = await ImageService.instance.invokeUrl(
+        playlist.songs[0]?.image
+      );
+      const cover = result ? result : this.getRandomImg(8);
       new PlaylistComp({
         id: playlist.id,
         cover,
         name: playlist.name,
-        songsCount,
+        songsCount: playlist.songs.length,
       }).mount(".playlist__list", "append");
-    });
+    }
   }
 
   getRandomImg = (count: number): string => {

@@ -1,27 +1,22 @@
 import { Component, ComponentOptions } from "core";
 import { getWordEndigs, html } from "helpers";
-// import { Playlist } from "types";
-
-// const getRandomImg = (count: number): string => {
-//   const array: number[] = Array.from({ length: count }, (v, i) => i + 1);
-//   const randomInd: number = Math.floor(Math.random() * count);
-//   const randomNum: number = array[randomInd];
-//   return defImages.find((el) => el.includes(`(${randomNum})`));
-// };
+// import { router } from "services";
 
 interface PlaylistOptions extends ComponentOptions {
   id: number;
   name: string;
   songsCount: number;
   // data: Playlist;
-  cover: string;
+  cover: string | undefined;
 }
 
 export class PlaylistComp extends Component<PlaylistOptions> {
   getTemplate(): string {
     const { id, name, songsCount, cover } = this.options;
+
     const songsCountStr = songsCount
-      ? getWordEndigs(songsCount, ["трек", "трека", "треков"])
+      ? `${songsCount} ` +
+        getWordEndigs(songsCount, ["трек", "трека", "треков"])
       : "Плейлист пока пуст";
 
     return html`
@@ -33,7 +28,7 @@ export class PlaylistComp extends Component<PlaylistOptions> {
           <h3 class="playlist__h3">
             <a
               class="playlist__h3__link"
-              href="songs/playlist?id=${id}"
+              href="/songs/playlist?id=${id}"
               data-navigo
               >${name}</a
             >
@@ -43,4 +38,17 @@ export class PlaylistComp extends Component<PlaylistOptions> {
       </li>
     `;
   }
+
+  // setHandlers(): void {
+  //   this.onLinkClick();
+  // }
+
+  // onLinkClick() {
+  //   const link = this.element?.querySelector(".playlist__h3__link");
+  //   if (!link || !(link instanceof HTMLLinkElement)) return;
+  //   this.on("click", link, (e: Event) => {
+  //     e.preventDefault();
+  //     router.navigate(link.href);
+  //   });
+  // }
 }

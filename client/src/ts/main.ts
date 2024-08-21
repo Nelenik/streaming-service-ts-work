@@ -27,7 +27,7 @@ try {
   footer.mount("#app", "append");
 
   //ROUTES
-  router.on(() => router.navigate("/songs/all"));
+  router.on(() => router.navigate("songs/all"));
 
   router.on("songs/:listType", async (match) => {
     if (!match) return;
@@ -42,10 +42,11 @@ try {
 
   router.on("playlists", async () => {
     await layoutPresener.drawPlaylists();
+    router.updatePageLinks();
   });
 
   router.resolve();
 } catch (err) {
   console.log(err);
-  router.navigate("/error");
+  router.navigate("error");
 }

@@ -28,8 +28,4 @@ export class Header extends Component {
       </header>
     `;
   }
-  // renderParts(): void {
-  //   this.insertChildren(this.element, new Search(), "append");
-  //   this.insertChildren(this.element, new Profile(), "append");
-  // }
 }

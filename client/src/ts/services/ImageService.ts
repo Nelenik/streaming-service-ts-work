@@ -21,20 +21,19 @@ export class ImageService {
     return blobFromBaseStr;
   }
 
-  public async invokeUrl(value: string): Promise<string> {
+  public async invokeUrl(value: string): Promise<string | undefined> {
+    if (!value || !value.includes("base64")) return;
     const hash = await this.getHash(value);
 
-    const mappedUrl = this.imageUrlMap.get(hash);
-    if (mappedUrl) {
-      return mappedUrl;
+    if (this.imageUrlMap.has(hash)) {
+      return this.imageUrlMap.get(hash);
     }
-
     const blobUrl = URL.createObjectURL(await this.convertToBlob(value));
     this.imageUrlMap.set(hash, blobUrl);
     return blobUrl;
   }
 
-  private async revokeUrl(value: string) {
+  public async revokeUrl(value: string) {
     const hash = await this.getHash(value);
     const objectUrl = this.imageUrlMap.get(hash);
     if (!objectUrl) return;
