@@ -4,10 +4,12 @@ import { html } from "helpers";
 interface SongMenuOptions extends ComponentOptions {
   inPlaylist: boolean;
   onMenuClick: (type: "add" | "remove") => void;
+  setActiveDrop: (component: SongMenu | null) => void;
 }
 
 export class SongMenu extends Component<SongMenuOptions> {
   private _isOpen: boolean = false;
+
   getTemplate(): string {
     const { inPlaylist } = this.options;
     return html`
@@ -35,11 +37,17 @@ export class SongMenu extends Component<SongMenuOptions> {
   }
 
   set isOpen(val: boolean) {
+    const { setActiveDrop } = this.options;
     this._isOpen = val;
     const menu = this.element?.querySelector(".track__dropdown");
     if (!menu) return;
-    if (val) this.openDropdown(menu);
-    else this.closeDropdown(menu);
+    if (val) {
+      this.openDropdown(menu);
+      setActiveDrop(this);
+    } else {
+      this.closeDropdown(menu);
+      setActiveDrop(null);
+    }
   }
 
   setHandlers(): void {
@@ -49,32 +57,33 @@ export class SongMenu extends Component<SongMenuOptions> {
 
   onClick() {
     const { onMenuClick, inPlaylist } = this.options;
-    this.on("click", document, (e) => {
-      const target = e.target;
-      const dropdownTrigger = this.element?.querySelector(
-        ".track__btn-dropdown"
-      );
-      const dropdownItem = this.element?.querySelector(
-        ".track__dropdown button"
-      );
-      if (!(target instanceof Element)) return;
+    if (this.element instanceof Element) {
+      this.on("click", this.element, (e) => {
+        const target = e.target;
+        const dropdownTrigger = this.element?.querySelector(
+          ".track__btn-dropdown"
+        );
+        const dropdownItem = this.element?.querySelector(
+          ".track__dropdown button"
+        );
+        if (!(target instanceof Element)) return;
 
-      if (target.closest(".track__dropdown button") === dropdownItem) {
-        onMenuClick(inPlaylist ? "remove" : "add");
-        this.isOpen = false;
-      } else if (target.closest(".track__btn-dropdown") === dropdownTrigger) {
-        this.isOpen = this._isOpen ? false : true;
-      } else if (this._isOpen && !this.element?.contains(target)) {
-        console.log("outside");
-        this.isOpen = false;
-      }
-    });
+        if (target.closest(".track__dropdown button") === dropdownItem) {
+          onMenuClick(inPlaylist ? "remove" : "add");
+          this.isOpen = false;
+        } else if (target.closest(".track__btn-dropdown") === dropdownTrigger) {
+          this.isOpen = this._isOpen ? false : true;
+        }
+      });
+    }
   }
   onEsc(): void {
-    this.on("keyup", document, (e: KeyboardEventInit) => {
-      if (e.code !== "Escape") return;
-      this.isOpen = false;
-    });
+    if (this.element instanceof Element) {
+      this.on("keyup", this.element, (e: KeyboardEventInit) => {
+        if (e.code !== "Escape") return;
+        this.isOpen = false;
+      });
+    }
   }
   openDropdown(menu: Element): void {
     const opened = document.querySelector(".dropdown--active");

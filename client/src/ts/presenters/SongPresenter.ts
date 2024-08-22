@@ -5,6 +5,7 @@ import { CustomEvents, ImageService, Modal, router } from "services";
 import { isSong, Models, Song } from "types";
 import { SongActions } from "models";
 import noImage from "img/no-image.jpg";
+import { ActiveDrop } from "./SongsListPresenter";
 
 type ModalType = "add" | "remove";
 
@@ -16,7 +17,8 @@ export class SongPresenter extends Presenter {
     private songData: Song,
     private ordinalNum: number,
     private inPlaylist: boolean,
-    private models: Models
+    private models: Models,
+    private activeDropState: ActiveDrop
   ) {
     super();
     this.init();
@@ -63,6 +65,7 @@ export class SongPresenter extends Presenter {
     new SongMenu({
       inPlaylist: this.inPlaylist,
       onMenuClick: this.openModal.bind(this),
+      setActiveDrop: this.activeDropState.setActive.bind(this.activeDropState),
     }).mount(this.songComponent.element, "append");
   }
 
