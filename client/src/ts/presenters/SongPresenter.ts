@@ -20,6 +20,7 @@ export class SongPresenter extends Presenter {
   ) {
     super();
     this.init();
+    console.log("song presenter initialized");
   }
 
   async init() {
@@ -71,7 +72,7 @@ export class SongPresenter extends Presenter {
     );
   }
   //handlers
-  async likeHandler(component: Component) {
+  private async likeHandler(component: Component) {
     const { songApi } = this.models;
     const { id } = this.songData;
     const isLiked = component.options.isLiked;

@@ -31,10 +31,11 @@ export class Like extends Component<LikeOptions> {
     `;
   }
   override setHandlers(): void {
-    const { onLike } = this.options;
+    const { isLiked, onLike } = this.options;
     if (!this.element) return;
     this.on("click", this.element, () => {
-      onLike(this);
+      this.element?.classList.toggle("like-btn--active", !isLiked);
+      setTimeout(() => onLike(this), 400);
     });
   }
 }

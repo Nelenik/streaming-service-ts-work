@@ -642,7 +642,7 @@ body {
 
 .track__like-btn path,
 .track__btn-dropdown circle {
-  transition: fill var(--transition-duration) ease-in-out;
+  transition: fill var(--transition-duration) linear;
 }
 
 .track__name__link:focus {
@@ -1337,7 +1337,7 @@ body {
   }
 
   .track__like-btn:hover path {
-    fill: var(--color-promo);
+    // fill: var(--color-promo);
   }
 
   .track__btn-dropdown:hover circle {
