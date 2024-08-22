@@ -1,23 +1,16 @@
 import { Component, ComponentOptions } from "core";
-import { getWordEndigs, html } from "helpers";
-// import { router } from "services";
+import { html } from "helpers";
 
-interface PlaylistOptions extends ComponentOptions {
+export interface PlaylistOptions extends ComponentOptions {
   id: number;
   name: string;
-  songsCount: number;
-  // data: Playlist;
-  cover: string | undefined;
+  songsCountStr: string;
+  cover: string;
 }
 
 export class PlaylistComp extends Component<PlaylistOptions> {
   getTemplate(): string {
-    const { id, name, songsCount, cover } = this.options;
-
-    const songsCountStr = songsCount
-      ? `${songsCount} ` +
-        getWordEndigs(songsCount, ["трек", "трека", "треков"])
-      : "Плейлист пока пуст";
+    const { id, name, songsCountStr, cover } = this.options;
 
     return html`
       <li class="playlist__item">

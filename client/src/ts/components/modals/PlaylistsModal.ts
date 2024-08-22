@@ -26,69 +26,6 @@ export class PlaylsistModal extends Component<PlaylsistModalOptions> {
               <div class="playlists-modal__playlist__title">Плейлист #1</div>
               <div class="playlists-modal__playlist__info">Нет треков</div>
             </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #2</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #3</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #4</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #5</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #6</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #7</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
-            <div class="playlists-modal__playlist">
-              <img
-                src="${playlistImg}"
-                alt="Gangsta's Paradise"
-                class="playlists-modal__playlist__image"
-              />
-              <div class="playlists-modal__playlist__title">Плейлист #8</div>
-              <div class="playlists-modal__playlist__info">Нет треков</div>
-            </div>
           </div>
           <div class="playlists-modal__footer">
             <button class="playlists-modal__btn playlists-modal__close-btn">

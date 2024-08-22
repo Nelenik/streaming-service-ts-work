@@ -6,3 +6,5 @@ export * from "./getContainer";
 export * from "./noop";
 export * from "./handleAxiosRequest";
 export * from "./checkObjectProps";
+export * from "./getRandomPlaylistCover";
+export * from "./formPlaylistViewData";
