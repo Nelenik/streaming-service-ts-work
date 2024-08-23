@@ -24,7 +24,6 @@ export class SongsListPresenter extends Presenter {
 
   constructor(private models: Models) {
     super();
-    console.log("song list presenter initialized");
 
     //handler that closes the active dropdown when clicked outside of it. removed from the component, because unnecessary handlers are hanged on the document.
     document.addEventListener("click", (e) => {
@@ -83,6 +82,7 @@ export class SongsListPresenter extends Presenter {
         if (isSongList(result)) {
           this.songsList = result;
         }
+        break;
       }
     }
   }

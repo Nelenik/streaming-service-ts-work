@@ -4,7 +4,11 @@ import "../styles/style.scss";
 import { HeaderPresenter, LayoutPresenter } from "presenters";
 import { authApi, userApi, songApi, playlistApi } from "models";
 import { isListType, Login } from "types";
-import { router } from "./services";
+import { ImageService, router } from "./services";
+
+window.addEventListener("beforeunload", () => {
+  ImageService.instance.clearAllUrls();
+});
 
 router.on("/error", () => {
   document.body.innerHTML = "<div>Page is not found</div>";

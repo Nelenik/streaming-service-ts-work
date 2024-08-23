@@ -40,4 +40,10 @@ export class ImageService {
     URL.revokeObjectURL(objectUrl);
     this.imageUrlMap.delete(hash);
   }
+  public clearAllUrls() {
+    this.imageUrlMap.forEach((objectUrl) => {
+      URL.revokeObjectURL(objectUrl);
+    });
+    this.imageUrlMap.clear();
+  }
 }

@@ -1234,6 +1234,7 @@ body {
 }
 
 .playlists-modal__playlist {
+  position: relative;
   width: 288px;
   height: 40px;
   margin-top: 20px;
@@ -1256,6 +1257,7 @@ body {
 }
 
 .playlists-modal__playlist__title {
+  text-align: start;
   padding-left: 10px;
   padding-top: 4px;
   width: 228px;
@@ -1263,6 +1265,13 @@ body {
   color: #11253D;
   display: inline-block;
   transition: color var(--transition-duration) ease-in-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
 }
 
 .playlists-modal__playlist__info {
@@ -1692,4 +1701,23 @@ body {
   .aside {
     padding: 20px 16px;
   }
+}
+
+.note-block {
+  position: fixed;
+  max-width: 200px;
+  bottom: 0;
+  right: 0;
+  z-index: 2000;
+}
+
+.note {
+
+  &__close {}
+
+  &__message {}
+
+  &--warning {}
+
+  &--error {}
 }

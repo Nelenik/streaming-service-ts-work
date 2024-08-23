@@ -1,18 +1,16 @@
-import { AddSongModal, BaseModal, RemoveSongModal } from "components/modals";
 import { Like, SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
-import { CustomEvents, ImageService, Modal, router } from "services";
-import { isSong, Models, Song } from "types";
+import { CustomEvents, ImageService, router } from "services";
+import { isSong, Models, Song, ModalType } from "types";
 import { SongActions } from "models";
 import noImage from "img/no-image.jpg";
 import { ActiveDrop } from "./SongsListPresenter";
-import { wait } from "helpers";
-
-type ModalType = "add" | "remove";
+import { ModalPresenter } from "presenters";
 
 export class SongPresenter extends Presenter {
   songComponent!: Component;
   likeComponent!: Component;
+  modalPresenter: ModalPresenter | null = null;
 
   constructor(
     private songData: Song,
@@ -22,8 +20,6 @@ export class SongPresenter extends Presenter {
     private activeDropState: ActiveDrop
   ) {
     super();
-    // this.init();
-    console.log("song presenter initialized");
   }
 
   async init() {
@@ -98,20 +94,10 @@ export class SongPresenter extends Presenter {
 
   openModal(type: ModalType) {
     console.log(this.songData.id);
-    let content: Component;
-    switch (type) {
-      case "add":
-        content = new AddSongModal();
-        break;
-      case "remove":
-        content = new RemoveSongModal();
-        break;
-    }
-    const modal = new BaseModal({ content });
-    Modal.instance.open(modal);
-    console.log(Modal.instance.openedComponent);
-    wait(0).then(() => {
-      modal.element?.classList.add("show");
+    this.modalPresenter = new ModalPresenter(type, this.songData.id, {
+      userApi: this.models.userApi,
+      playlistApi: this.models.playlistApi,
     });
+    this.modalPresenter.init();
   }
 }

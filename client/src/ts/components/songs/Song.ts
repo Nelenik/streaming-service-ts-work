@@ -28,7 +28,6 @@ export class SongComponent extends Component<SongOptions> {
     } = this.options;
     const trackDur = getSongDurStr(duration);
     const daysAgo = getDaysAgo(createdAt);
-
     return html`
       <li class="tracks__item flex">
         <div class="tracks__item__number">${ordinalNum}</div>
