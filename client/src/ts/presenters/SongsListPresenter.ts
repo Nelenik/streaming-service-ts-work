@@ -43,16 +43,18 @@ export class SongsListPresenter extends Presenter {
     this.songsListComponent = new SongsList().mount(".main", "append");
   }
 
-  mountSongs() {
-    this.songsList.forEach((song, i) => {
-      new SongPresenter(
+  async mountSongs() {
+    for (let i = 0; i < this.songsList.length; i++) {
+      const song = this.songsList[i];
+      const songPresenter = new SongPresenter(
         song,
         i + 1,
         Boolean(this.playlistId),
         this.models,
         this.activeDropState
       );
-    });
+      await songPresenter.init();
+    }
   }
 
   async getActualList(listType: ListType, playlistId: number | null) {

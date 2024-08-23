@@ -3,7 +3,6 @@ import { Layout } from "components/layout";
 import { Component, Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
-// import { EventEmitter } from "services";
 import { ListType } from "types";
 
 interface LayoutPresenterModels {
@@ -47,7 +46,7 @@ export class LayoutPresenter extends Presenter {
     }
     this.songsListPresInst.init();
     await this.songsListPresInst.getActualList(listType, playlistId);
-    this.songsListPresInst.mountSongs();
+    await this.songsListPresInst.mountSongs();
   }
 
   async drawPlaylists() {

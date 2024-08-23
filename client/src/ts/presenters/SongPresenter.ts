@@ -1,4 +1,4 @@
-import { PlaylsistModal } from "components/modals";
+import { AddSongModal, BaseModal, RemoveSongModal } from "components/modals";
 import { Like, SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
 import { CustomEvents, ImageService, Modal, router } from "services";
@@ -6,6 +6,7 @@ import { isSong, Models, Song } from "types";
 import { SongActions } from "models";
 import noImage from "img/no-image.jpg";
 import { ActiveDrop } from "./SongsListPresenter";
+import { wait } from "helpers";
 
 type ModalType = "add" | "remove";
 
@@ -21,7 +22,7 @@ export class SongPresenter extends Presenter {
     private activeDropState: ActiveDrop
   ) {
     super();
-    this.init();
+    // this.init();
     console.log("song presenter initialized");
   }
 
@@ -97,8 +98,20 @@ export class SongPresenter extends Presenter {
 
   openModal(type: ModalType) {
     console.log(this.songData.id);
-    const modal = new PlaylsistModal({ type });
+    let content: Component;
+    switch (type) {
+      case "add":
+        content = new AddSongModal();
+        break;
+      case "remove":
+        content = new RemoveSongModal();
+        break;
+    }
+    const modal = new BaseModal({ content });
     Modal.instance.open(modal);
-    modal.element?.classList.add("show");
+    console.log(Modal.instance.openedComponent);
+    wait(0).then(() => {
+      modal.element?.classList.add("show");
+    });
   }
 }

@@ -8,3 +8,4 @@ export * from "./handleAxiosRequest";
 export * from "./checkObjectProps";
 export * from "./getRandomPlaylistCover";
 export * from "./formPlaylistViewData";
+export * from "./wait";

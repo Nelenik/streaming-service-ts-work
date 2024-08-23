@@ -3,7 +3,7 @@ import { getContainer } from "helpers";
 
 export class Modal {
   private _place: Element = document.body;
-  private openedComponent: Component | null = null;
+  public openedComponent: Component | null = null;
   static instance = new Modal();
 
   set place(selectorOrEl: string | Element) {
