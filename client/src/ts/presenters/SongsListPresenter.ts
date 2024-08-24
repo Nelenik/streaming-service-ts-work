@@ -1,8 +1,9 @@
 import { SongMenu, SongsList } from "components/songs";
 import { Component, Presenter } from "core";
 import { SongPresenter } from "./SongPresenter";
-import { isPlaylist, isSongList, ListType, Models, Song } from "types";
+import { isPlaylist, isSongList, ListType, Models } from "types";
 import { PlaylistActions, SongActions } from "models";
+import { DataStore } from "services";
 
 export type ActiveDrop = {
   active: SongMenu | null;
@@ -11,7 +12,6 @@ export type ActiveDrop = {
 
 export class SongsListPresenter extends Presenter {
   songsListComponent!: Component;
-  songsList: Song[] = [];
   playlistId: number | null = null;
   listTitle: string = "Треки";
 
@@ -47,8 +47,9 @@ export class SongsListPresenter extends Presenter {
   }
 
   async mountSongs() {
-    for (let i = 0; i < this.songsList.length; i++) {
-      const song = this.songsList[i];
+    const actualSongList = DataStore.instance.getSongsList();
+    for (let i = 0; i < actualSongList.length; i++) {
+      const song = actualSongList[i];
       const songPresenter = new SongPresenter(
         song,
         i + 1,
@@ -68,13 +69,15 @@ export class SongsListPresenter extends Presenter {
       case "all": {
         const result = await songApi.handleSongsAction(SongActions.FETCH_ALL);
         if (isSongList(result)) {
-          this.songsList = result;
+          DataStore.instance.storeSongsList(result);
           this.listTitle = "Треки";
         }
         break;
       }
       case "favourites": {
-        this.songsList = (await userApi.getUserLikes()).songLikes;
+        DataStore.instance.storeSongsList(
+          (await userApi.getUserLikes()).songLikes
+        );
         this.listTitle = "Избранное";
         break;
       }
@@ -86,12 +89,9 @@ export class SongsListPresenter extends Presenter {
           { playlistId }
         );
         if (isPlaylist(result)) {
-          this.songsList = result.songs;
+          DataStore.instance.storeSongsList(result.songs);
           this.listTitle = result.name;
         }
-        // if (isSongList(result)) {
-        //   this.songsList = result;
-        // }
         break;
       }
     }

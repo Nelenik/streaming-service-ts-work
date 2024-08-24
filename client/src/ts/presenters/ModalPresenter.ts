@@ -4,7 +4,7 @@ import { Note } from "components/notes";
 import { Component, Presenter } from "core";
 import { formPlaylistViewData, wait } from "helpers";
 import { PlaylistActions } from "models";
-import { CustomEvents, Modal } from "services";
+import { CustomEvents, DataStore, Modal } from "services";
 import { ModalType, Models } from "types";
 
 type ModalPresenterModels = Pick<Models, "playlistApi" | "userApi">;
@@ -22,7 +22,7 @@ export class ModalPresenter extends Presenter {
     let content: Component;
     switch (this.type) {
       case "add": {
-        const playlists = await this.models.userApi.getPlaylists();
+        const playlists = DataStore.instance.getPlaylists();
         const playlistsToRender = await Promise.all(
           playlists.map(async (el) => await formPlaylistViewData(el))
         );
@@ -58,6 +58,9 @@ export class ModalPresenter extends Presenter {
           playlistId,
           songId,
         });
+        DataStore.instance.storePlaylists(
+          await this.models.userApi.getPlaylists()
+        );
       } catch (err) {
         if (err instanceof AxiosError) {
           const note = new Note({
