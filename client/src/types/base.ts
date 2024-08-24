@@ -88,3 +88,5 @@ export interface Models {
 export type ListType = "all" | "favourites" | "playlist";
 
 export type ModalType = "add" | "remove";
+
+export type NoteType = "warning" | "error";

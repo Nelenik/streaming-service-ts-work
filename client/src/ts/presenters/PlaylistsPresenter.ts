@@ -11,7 +11,6 @@ export class PlaylistPresenter extends Presenter {
 
   constructor(private models: PlaylistModels) {
     super();
-    console.log("playlist presenter initialized");
   }
 
   init() {

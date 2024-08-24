@@ -1,14 +1,19 @@
-import { Component } from "core";
+import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
 
-export class SongsList extends Component {
+interface SongsListOptions extends ComponentOptions {
+  title: string;
+}
+
+export class SongsList extends Component<SongsListOptions> {
   getTemplate(): string {
+    const { title } = this.options;
     return html`
       <section
         class="tracks tabs-content tabs-content--shown"
         data-target="songs"
       >
-        <h2 class="tracks__h2 title__h2">Треки</h2>
+        <h2 class="tracks__h2 title__h2">${title}</h2>
         <div class="tracks__content">
           <div class="tracks__header flex">
             <div class="tracks__header__number">№</div>

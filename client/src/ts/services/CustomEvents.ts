@@ -1,8 +1,9 @@
+import { ListType } from "types";
+
 export const CustomEvents = new Map();
 
 CustomEvents.set(
-  "rerenderFavorites",
-  new CustomEvent("rerenderFavorites", {
-    detail: { listType: "favourites", id: null },
-  })
+  "rerenderTrackList",
+  (detail: { listType: ListType; id: null | number }) =>
+    new CustomEvent("rerenderTrackList", { detail })
 );

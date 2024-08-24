@@ -1,9 +1,10 @@
 import { AxiosError } from "axios";
 import { AddSongModal, BaseModal, RemoveSongModal } from "components/modals";
+import { Note } from "components/notes";
 import { Component, Presenter } from "core";
 import { formPlaylistViewData, wait } from "helpers";
 import { PlaylistActions } from "models";
-import { Modal } from "services";
+import { CustomEvents, Modal } from "services";
 import { ModalType, Models } from "types";
 
 type ModalPresenterModels = Pick<Models, "playlistApi" | "userApi">;
@@ -16,7 +17,6 @@ export class ModalPresenter extends Presenter {
     private models: ModalPresenterModels
   ) {
     super();
-    console.log("modal presenter initialized");
   }
   async init() {
     let content: Component;
@@ -29,36 +29,57 @@ export class ModalPresenter extends Presenter {
 
         content = new AddSongModal({
           playlistsToRender,
-          onAdd: this.onAdd(this.songId),
+          onAdd: this.onModalAction(this.songId, PlaylistActions.ADD_SONG),
         });
         break;
       }
       case "remove": {
-        content = new RemoveSongModal();
+        content = new RemoveSongModal({
+          onRemove: this.onModalAction(
+            this.songId,
+            PlaylistActions.REMOVE_SONG
+          ),
+        });
         break;
       }
     }
-    const modal = new BaseModal({ content });
-    Modal.instance.open(modal);
-    console.log(Modal.instance.openedComponent);
+    this.modal = new BaseModal({ content });
+    Modal.instance.open(this.modal);
     wait(0).then(() => {
-      modal.element?.classList.add("show");
+      this.modal?.element?.classList.add("show");
     });
   }
 
-  onAdd(songId: number) {
+  onModalAction(songId: number, action: PlaylistActions) {
     const { playlistApi } = this.models;
     return async (playlistId: number) => {
       try {
-        await playlistApi.handlePlaylistsAction(PlaylistActions.ADD_SONG, {
+        await playlistApi.handlePlaylistsAction(action, {
           playlistId,
           songId,
         });
-        this.modal?.close();
       } catch (err) {
         if (err instanceof AxiosError) {
-          console.log(err.response?.data.message);
+          const note = new Note({
+            message: err.response?.data.message,
+            type: "warning",
+          });
+          note.show();
+          wait(4000).then(() => {
+            note.close();
+          });
         }
+      } finally {
+        this.modal?.close();
+        wait(500).then(() => {
+          if (action === "REMOVE_SONG") {
+            const rerenderEvent = CustomEvents.get("rerenderTrackList")({
+              listType: "playlist",
+              id: playlistId,
+            });
+            window.dispatchEvent(rerenderEvent);
+          }
+        });
       }
     };
   }

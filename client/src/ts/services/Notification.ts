@@ -1,55 +1,34 @@
-import { Component, ComponentOptions } from "core";
-import { html, wait } from "helpers";
-
-export class Notification {
+export class NoteService {
+  static instance = new NoteService();
+  styles = `
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: fixed;
+    width: min(300px, 90%);
+    max-height: 100%;
+    overflow-y: auto;
+    top: 0;
+    right: 0;
+    z-index: 2000;
+  `;
   notesWrapper!: HTMLElement;
-  static instance = new Notification();
-
   constructor() {
     this.createWrap();
   }
 
-  createWrap() {
-    console.log("created wrap");
+  private createWrap(): void {
     const wrap = document.createElement("div");
-    wrap.classList.add("note-block");
-    document.body.append(wrap);
-    console.log(document);
+    wrap.id = "notifications";
+    wrap.style.cssText = this.styles;
     this.notesWrapper = wrap;
+    document.body.append(wrap);
   }
-  displayNote(message: string, type?: NoteType) {
-    const noteInst = new Note({ message, type });
-    if (!noteInst || !(noteInst.element instanceof HTMLElement)) return;
-    noteInst.mount(document.body, "append");
-    wait(600).then(() => {
-      noteInst.element?.remove();
-      noteInst.removeElement();
-    });
+  showNote(note: HTMLElement): void {
+    this.notesWrapper.append(note);
   }
-}
 
-interface NoteOptions extends ComponentOptions {
-  message: string;
-  type?: NoteType;
-}
-
-type NoteType = "warning" | "error";
-class Note extends Component<NoteOptions> {
-  getTemplate(): string {
-    const { message, type } = this.options;
-    const modificatior = type ? `note__${type}` : "";
-    return html`
-      <div class="note ${modificatior}">
-        <button class="note__close">⛌</button>
-        <p class="note__message">${message}</p>
-      </div>
-    `;
-  }
-  setHandlers(): void {
-    const closeBtn = this.element?.querySelector(".note__close");
-    if (!(closeBtn instanceof Element)) return;
-    this.on("click", closeBtn, () => {
-      this.element?.remove();
-    });
+  clearAllNotes() {
+    this.notesWrapper.replaceChildren();
   }
 }

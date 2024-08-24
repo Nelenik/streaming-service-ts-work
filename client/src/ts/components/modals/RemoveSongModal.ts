@@ -1,7 +1,10 @@
 import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
+import { router } from "services";
 
-interface RemoveSongModalOptions extends ComponentOptions {}
+interface RemoveSongModalOptions extends ComponentOptions {
+  onRemove: (playlistId: number) => Promise<void>;
+}
 
 export class RemoveSongModal extends Component<RemoveSongModalOptions> {
   getTemplate(): string {
@@ -18,5 +21,18 @@ export class RemoveSongModal extends Component<RemoveSongModalOptions> {
         </div>
       </div>
     `;
+  }
+
+  setHandlers(): void {
+    const { onRemove } = this.options;
+    const removeBtn = this.element?.querySelector(
+      ".playlists-modal__confirm-btn"
+    );
+    if (!(removeBtn instanceof Element)) return;
+    this.on("click", removeBtn, async () => {
+      const currentLocation = router.getCurrentLocation();
+      const playlistId = Number(currentLocation.params?.id);
+      await onRemove(playlistId);
+    });
   }
 }

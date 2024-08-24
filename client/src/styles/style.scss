@@ -1703,21 +1703,50 @@ body {
   }
 }
 
-.note-block {
-  position: fixed;
-  max-width: 200px;
-  bottom: 0;
-  right: 0;
-  z-index: 2000;
-}
-
+//notifications
 .note {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 100px;
+  backdrop-filter: blur(5px);
+  background-color: rgba(121, 167, 235, 0.3);
+  box-shadow: 0px 3px 11px -3px rgba(0, 0, 0, 0.75);
+  transition: opacity 0.4s linear;
+  opacity: 0;
 
-  &__close {}
 
-  &__message {}
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    outline: none;
+    transition: color 0.3s linear;
 
-  &--warning {}
+    &:hover,
+    &:focus-visible {
+      color: var(--color-promo);
+    }
+  }
 
-  &--error {}
+  &__message {
+    margin: 0;
+    margin: auto;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  &--warning {
+    background-color: rgba(247, 247, 120, 0.3);
+  }
+
+  &--error {
+    background-color: rgba(249, 171, 192, 0.3);
+  }
+
+  &--show {
+    opacity: 1;
+  }
 }

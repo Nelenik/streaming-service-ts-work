@@ -27,8 +27,8 @@ export class LayoutPresenter extends Presenter {
 
     new Aside({ userPlaylists }).mount(".content-wrap", "prepend");
 
-    //rerender of the favorites on unlike
-    window.addEventListener("rerenderFavorites", async (e: CustomEventInit) => {
+    //rerender of the tracklist on unlike or on removing from the playlist
+    window.addEventListener("rerenderTrackList", async (e: CustomEventInit) => {
       const { listType, id } = e.detail;
       await this.drawSongsList(listType, id);
     });
@@ -44,8 +44,8 @@ export class LayoutPresenter extends Presenter {
     if (!this.songsListPresInst) {
       this.songsListPresInst = new SongsListPresenter(this.models);
     }
-    this.songsListPresInst.init();
     await this.songsListPresInst.getActualList(listType, playlistId);
+    this.songsListPresInst.init();
     await this.songsListPresInst.mountSongs();
   }
 

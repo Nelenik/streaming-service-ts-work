@@ -1,7 +1,7 @@
 import { SongMenu, SongsList } from "components/songs";
 import { Component, Presenter } from "core";
 import { SongPresenter } from "./SongPresenter";
-import { isSongList, ListType, Models, Song } from "types";
+import { isPlaylist, isSongList, ListType, Models, Song } from "types";
 import { PlaylistActions, SongActions } from "models";
 
 export type ActiveDrop = {
@@ -13,6 +13,7 @@ export class SongsListPresenter extends Presenter {
   songsListComponent!: Component;
   songsList: Song[] = [];
   playlistId: number | null = null;
+  listTitle: string = "Треки";
 
   //active dropdown state
   activeDropState: ActiveDrop = {
@@ -39,7 +40,10 @@ export class SongsListPresenter extends Presenter {
   }
 
   async init() {
-    this.songsListComponent = new SongsList().mount(".main", "append");
+    this.songsListComponent = new SongsList({ title: this.listTitle }).mount(
+      ".main",
+      "append"
+    );
   }
 
   async mountSongs() {
@@ -65,23 +69,29 @@ export class SongsListPresenter extends Presenter {
         const result = await songApi.handleSongsAction(SongActions.FETCH_ALL);
         if (isSongList(result)) {
           this.songsList = result;
+          this.listTitle = "Треки";
         }
         break;
       }
       case "favourites": {
         this.songsList = (await userApi.getUserLikes()).songLikes;
+        this.listTitle = "Избранное";
         break;
       }
       case "playlist": {
         if (!playlistId) break;
 
         const result = await playlistApi.handlePlaylistsAction(
-          PlaylistActions.FETCH_SONGS,
+          PlaylistActions.FETCH_ONE,
           { playlistId }
         );
-        if (isSongList(result)) {
-          this.songsList = result;
+        if (isPlaylist(result)) {
+          this.songsList = result.songs;
+          this.listTitle = result.name;
         }
+        // if (isSongList(result)) {
+        //   this.songsList = result;
+        // }
         break;
       }
     }

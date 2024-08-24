@@ -82,7 +82,10 @@ export class SongPresenter extends Presenter {
 
     const currentLocation = router.getCurrentLocation();
     if (isLiked && currentLocation.url === "songs/favourites") {
-      const rerenderEvent = CustomEvents.get("rerenderFavorites");
+      const rerenderEvent = CustomEvents.get("rerenderTrackList")({
+        listType: "favourites",
+        id: null,
+      });
       window.dispatchEvent(rerenderEvent);
     } else if (isSong(result)) {
       component.options = {
@@ -93,7 +96,6 @@ export class SongPresenter extends Presenter {
   }
 
   openModal(type: ModalType) {
-    console.log(this.songData.id);
     this.modalPresenter = new ModalPresenter(type, this.songData.id, {
       userApi: this.models.userApi,
       playlistApi: this.models.playlistApi,

@@ -3,3 +3,4 @@ export { default } from "./Api";
 export * from "./CustomEvents";
 export * from "./Router";
 export * from "./ImageService";
+export * from "./Notification";

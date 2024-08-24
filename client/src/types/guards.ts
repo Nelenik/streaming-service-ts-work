@@ -1,5 +1,5 @@
 import { checkObjectProps } from "helpers";
-import { ListType, Song } from "types";
+import { ListType, Playlist, Song } from "types";
 
 export function isSongList(list: unknown): list is Song[] {
   return (
@@ -12,6 +12,10 @@ export function isSongList(list: unknown): list is Song[] {
 
 export function isSong(song: unknown): song is Song {
   return checkObjectProps(song, ["duration", "album"]);
+}
+
+export function isPlaylist(playlist: unknown): playlist is Playlist {
+  return checkObjectProps(playlist, ["user", "songs"]);
 }
 
 export function isListType(val: string | undefined): val is ListType {

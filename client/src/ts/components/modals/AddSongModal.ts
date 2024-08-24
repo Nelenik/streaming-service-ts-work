@@ -55,8 +55,8 @@ export class AddSongModal extends Component<AddSongModalOptions> {
     btns?.forEach((el) => {
       this.on("click", el, async () => {
         if (!(el instanceof HTMLElement)) return;
-        const playlistId = el.dataset.playlistId;
-        await onAdd(Number(playlistId));
+        const playlistId = Number(el.dataset.playlistId);
+        await onAdd(playlistId);
       });
     });
   }
