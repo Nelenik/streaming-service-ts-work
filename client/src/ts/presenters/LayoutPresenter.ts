@@ -3,7 +3,7 @@ import { Layout } from "components/layout";
 import { Component, Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
-import { ListType } from "types";
+import { isPlaylists, isSongList, ListType } from "types";
 import { DataStore } from "services";
 
 interface LayoutPresenterModels {
@@ -35,6 +35,17 @@ export class LayoutPresenter extends Presenter {
       const { listType, id } = e.detail;
       await this.drawSongsList(listType, id);
     });
+    //rerender playlists or tracklists on filter
+    window.addEventListener("onFilter", async (e: CustomEventInit) => {
+      const { filtredData } = e.detail;
+      this.cleanMainBlock();
+      if (isSongList(filtredData)) {
+        this.songsListPresInst?.init();
+        await this.songsListPresInst?.mountSongs(filtredData);
+      } else if (isPlaylists(filtredData)) {
+        await this.drawPlaylists();
+      }
+    });
   }
 
   cleanMainBlock() {
@@ -49,7 +60,7 @@ export class LayoutPresenter extends Presenter {
     }
     await this.songsListPresInst.getActualList(listType, playlistId);
     this.songsListPresInst.init();
-    await this.songsListPresInst.mountSongs();
+    await this.songsListPresInst.mountSongs(DataStore.instance.getSongsList());
   }
 
   async drawPlaylists() {
@@ -58,6 +69,8 @@ export class LayoutPresenter extends Presenter {
       this.playlistPresInst = new PlaylistPresenter();
     }
     this.playlistPresInst.init();
-    await this.playlistPresInst.mountPlaylists();
+    await this.playlistPresInst.mountPlaylists(
+      DataStore.instance.getPlaylists()
+    );
   }
 }

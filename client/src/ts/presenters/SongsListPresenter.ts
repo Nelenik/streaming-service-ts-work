@@ -1,7 +1,7 @@
 import { SongMenu, SongsList } from "components/songs";
 import { Component, Presenter } from "core";
 import { SongPresenter } from "./SongPresenter";
-import { isPlaylist, isSongList, ListType, Models } from "types";
+import { isPlaylist, isSongList, ListType, Models, Song } from "types";
 import { PlaylistActions, SongActions } from "models";
 import { DataStore } from "services";
 
@@ -39,15 +39,14 @@ export class SongsListPresenter extends Presenter {
     });
   }
 
-  async init() {
+  init() {
     this.songsListComponent = new SongsList({ title: this.listTitle }).mount(
       ".main",
       "append"
     );
   }
 
-  async mountSongs() {
-    const actualSongList = DataStore.instance.getSongsList();
+  async mountSongs(actualSongList: Song[]) {
     for (let i = 0; i < actualSongList.length; i++) {
       const song = actualSongList[i];
       const songPresenter = new SongPresenter(
