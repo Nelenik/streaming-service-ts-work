@@ -9,3 +9,5 @@ export * from "./checkObjectProps";
 export * from "./getRandomPlaylistCover";
 export * from "./formPlaylistViewData";
 export * from "./wait";
+export * from "./shuffleArray";
+export * from "./checkLike";

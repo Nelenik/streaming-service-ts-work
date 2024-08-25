@@ -1,10 +1,10 @@
-import { Footer } from "components/footer";
 import "../index.html";
 import "../styles/style.scss";
 import { HeaderPresenter, LayoutPresenter } from "presenters";
 import { authApi, userApi, songApi, playlistApi } from "models";
 import { isListType, Login } from "types";
 import { ImageService, router } from "./services";
+import { FooterPresenter } from "./presenters/FooterPresenter";
 
 window.addEventListener("beforeunload", () => {
   ImageService.instance.clearAllUrls();
@@ -24,11 +24,10 @@ try {
   //INIT COMPONENTNS
   const headerPresenter = new HeaderPresenter({ userApi });
   const layoutPresener = new LayoutPresenter({ userApi, songApi, playlistApi });
-  const footer = new Footer();
+  const footerPresenter = new FooterPresenter({ userApi, songApi });
 
   await headerPresenter.init();
   await layoutPresener.init();
-  footer.mount("#app", "append");
 
   //ROUTES
   router.on(() => router.navigate("songs/all"));
@@ -41,6 +40,7 @@ try {
         data.listType,
         Number(params?.id) || null
       );
+      footerPresenter.init();
     }
   });
 
