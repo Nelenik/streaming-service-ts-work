@@ -1,8 +1,10 @@
+import { AxiosError } from "axios";
+import { Note } from "components/notes";
 import { Like } from "components/songs";
 import { Component, Presenter } from "core";
-import { checkLike } from "helpers";
+import { checkLike, wait } from "helpers";
 import { SongActions } from "models";
-import { CustomEvents, router } from "services";
+import { EventBus, CustomEvents, router } from "services";
 import { isSong, Models } from "types";
 
 type LikePresenterModels = Pick<Models, "userApi" | "songApi">;
@@ -19,28 +21,53 @@ export class LikePresenter extends Presenter {
   init() {
     new Like({
       isLiked: this.isSongLiked,
-      onLike: this.likeHandler.bind(this),
+      onLikeClick: this.onLikeClick.bind(this),
+      onLikeCustom: this.onLikeCustom.bind(this),
     }).mount(this.likeContainer, "append");
   }
 
-  private async likeHandler(component: Component) {
+  private async onLikeClick(component: Component) {
     const { songApi, userApi } = this.models;
     const isLiked = component.options.isLiked;
-    const result = isLiked
-      ? await songApi.handleSongsAction(SongActions.UNLIKE, this.songId)
-      : await songApi.handleSongsAction(SongActions.LIKE, this.songId);
-
-    const currentLocation = router.getCurrentLocation();
-    if (isLiked && currentLocation.url === "songs/favourites") {
-      const rerenderEvent = CustomEvents.get("rerenderTrackList")({
-        listType: "favourites",
-        id: null,
-      });
-      window.dispatchEvent(rerenderEvent);
-    } else if (isSong(result)) {
+    try {
+      const result = isLiked
+        ? await songApi.handleSongsAction(SongActions.UNLIKE, this.songId)
+        : await songApi.handleSongsAction(SongActions.LIKE, this.songId);
+      const currentLocation = router.getCurrentLocation();
+      if (currentLocation.url === "songs/favourites") {
+        const rerenderEvent = CustomEvents.get("rerenderTrackList")({
+          listType: "favourites",
+          id: null,
+        });
+        EventBus.dispatchEvent(rerenderEvent);
+      }
+      if (isSong(result)) {
+        const songLikeEvent = CustomEvents.get("songLike")({
+          songId: this.songId,
+          isLiked: checkLike(result, userApi.currUsername),
+        });
+        EventBus.dispatchEvent(songLikeEvent);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        const note = new Note({
+          message: err.response?.data.message,
+          type: "warning",
+        });
+        note.show();
+        wait(4000).then(() => {
+          note.close();
+        });
+      }
+    }
+  }
+  //synchronization between likes in playlist and in player
+  private onLikeCustom(e: CustomEventInit, component: Component) {
+    const { songId, isLiked } = e.detail;
+    if (this.songId === songId) {
       component.options = {
         ...component.options,
-        isLiked: checkLike(result, userApi.currUsername),
+        isLiked,
       };
     }
   }

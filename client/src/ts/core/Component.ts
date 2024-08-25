@@ -64,15 +64,17 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   on(
     eventType: string,
     element: EventTarget,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions
   ) {
-    element.addEventListener(eventType, listener);
+    element.addEventListener(eventType, listener, options);
   }
   off(
     eventType: string,
     element: EventTarget,
-    listener: EventListenerOrEventListenerObject = NOOP
+    listener: EventListenerOrEventListenerObject = NOOP,
+    options?: AddEventListenerOptions
   ) {
-    element.removeEventListener(eventType, listener);
+    element.removeEventListener(eventType, listener, options);
   }
 }

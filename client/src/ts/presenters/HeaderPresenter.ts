@@ -1,7 +1,7 @@
 import { Header, Profile, Search } from "components/header";
 import { Presenter } from "core";
 import { Models, Playlists, Song } from "types";
-import { CustomEvents, DataStore, router } from "services";
+import { CustomEvents, DataStore, EventBus, router } from "services";
 
 type HeaderPresenterModels = Pick<Models, "userApi">;
 
@@ -34,7 +34,7 @@ export class HeaderPresenter extends Presenter {
         .filter((el) => el.name.includes(value));
     }
     const onFilterEvent = CustomEvents.get("onFilter")({ filtredData });
-    window.dispatchEvent(onFilterEvent);
+    EventBus.dispatchEvent(onFilterEvent);
   }
 }
 

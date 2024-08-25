@@ -1,9 +1,11 @@
 import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
+import { EventBus } from "services";
 
 interface LikeOptions extends ComponentOptions {
   isLiked: boolean;
-  onLike: (component: Component) => void;
+  onLikeClick: (component: Component) => void;
+  onLikeCustom: (e: CustomEventInit, component: Component) => void;
 }
 
 export class Like extends Component<LikeOptions> {
@@ -31,11 +33,20 @@ export class Like extends Component<LikeOptions> {
     `;
   }
   override setHandlers(): void {
-    const { isLiked, onLike } = this.options;
+    const { isLiked, onLikeClick, onLikeCustom } = this.options;
     if (!this.element) return;
     this.on("click", this.element, () => {
       this.element?.classList.toggle("like-btn--active", !isLiked);
-      setTimeout(() => onLike(this), 400);
+      setTimeout(() => onLikeClick(this), 400);
     });
+
+    this.on(
+      "songLike",
+      EventBus,
+      (e: CustomEventInit) => {
+        onLikeCustom(e, this);
+      },
+      { once: true }
+    );
   }
 }

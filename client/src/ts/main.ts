@@ -28,7 +28,7 @@ try {
 
   await headerPresenter.init();
   await layoutPresener.init();
-
+  footerPresenter.init();
   //ROUTES
   router.on(() => router.navigate("songs/all"));
 
@@ -40,7 +40,7 @@ try {
         data.listType,
         Number(params?.id) || null
       );
-      footerPresenter.init();
+      footerPresenter.drawPlayerParts();
     }
   });
 

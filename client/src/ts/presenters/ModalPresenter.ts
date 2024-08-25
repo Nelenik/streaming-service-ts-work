@@ -4,7 +4,7 @@ import { Note } from "components/notes";
 import { Component, Presenter } from "core";
 import { formPlaylistViewData, wait } from "helpers";
 import { PlaylistActions } from "models";
-import { CustomEvents, DataStore, Modal } from "services";
+import { CustomEvents, DataStore, EventBus, Modal } from "services";
 import { ModalType, Models } from "types";
 
 type ModalPresenterModels = Pick<Models, "playlistApi" | "userApi">;
@@ -80,7 +80,7 @@ export class ModalPresenter extends Presenter {
               listType: "playlist",
               id: playlistId,
             });
-            window.dispatchEvent(rerenderEvent);
+            EventBus.dispatchEvent(rerenderEvent);
           }
         });
       }

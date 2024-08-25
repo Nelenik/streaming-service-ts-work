@@ -12,16 +12,19 @@ export class FooterPresenter extends Presenter {
   constructor(private models: FooterPresenterModels) {
     super();
   }
-  async init() {
+  init() {
     this.footerComponent = new Footer().mount("#app", "append");
+  }
 
+  drawPlayerParts() {
     const footerLikeParent = this.footerComponent.element?.querySelector(
       ".player__name__header"
     );
     if (!(footerLikeParent instanceof HTMLElement)) return;
-    console.log("like is mounting");
+
+    this.footerComponent.element?.querySelector(".track__like-btn")?.remove();
+
     const song = DataStore.instance.getSongsList()[0];
-    console.log("song", song);
     if (song) {
       new LikePresenter(
         this.models,
