@@ -2,15 +2,17 @@ import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
 import { EventBus } from "services";
 
-interface LikeOptions extends ComponentOptions {
+export interface LikeOptions extends ComponentOptions {
+  songId: number;
   isLiked: boolean;
-  onLikeClick: (component: Component) => void;
-  onLikeCustom: (e: CustomEventInit, component: Component) => void;
+  onLikeClick: (component: Like) => void;
+  onLikeCustom: (e: CustomEventInit, component: Like) => void;
 }
 
 export class Like extends Component<LikeOptions> {
   constructor(options: LikeOptions) {
     super(options);
+    console.log("new like is created");
   }
   getTemplate(): string {
     const { isLiked } = this.options;

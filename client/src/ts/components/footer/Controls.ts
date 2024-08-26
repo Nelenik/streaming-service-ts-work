@@ -8,7 +8,7 @@ interface ControlsOptions extends ComponentOptions {
 
 export class Controls extends Component<ControlsOptions> {
   getTemplate(): string {
-    const { progress, duration } = this.options;
+    const { progress = 0, duration = 0 } = this.options;
     const progressStr = getSongDurStr(progress);
     const durationStr = getSongDurStr(duration);
     return html`

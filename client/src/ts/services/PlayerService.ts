@@ -2,11 +2,13 @@
 import { Song } from "types";
 import { Howl } from "howler";
 import { CustomEvents, EventBus } from "services";
+import { NOOP } from "helpers";
 
 export class PlayerService {
   sound: Howl | null = null;
   private progressTimeout: number = 0;
-  playSong(song: Song) {
+
+  playSong(song: Song, onPlay: () => void = NOOP, onEnd: () => void = NOOP) {
     if (this.sound) {
       this.sound.unload();
       this.sound = null;
@@ -16,9 +18,11 @@ export class PlayerService {
       src: [`http://localhost:3000${song.path}`],
       html5: true,
       onplay: () => {
+        onPlay();
         this.showProgress();
       },
       onend: () => {
+        onEnd();
         window.clearTimeout(this.progressTimeout);
       },
     });

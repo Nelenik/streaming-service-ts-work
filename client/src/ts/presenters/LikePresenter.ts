@@ -20,19 +20,21 @@ export class LikePresenter extends Presenter {
   }
   init() {
     new Like({
+      songId: this.songId,
       isLiked: this.isSongLiked,
       onLikeClick: this.onLikeClick.bind(this),
       onLikeCustom: this.onLikeCustom.bind(this),
     }).mount(this.likeContainer, "append");
   }
 
-  private async onLikeClick(component: Component) {
+  private async onLikeClick(component: Like) {
     const { songApi, userApi } = this.models;
+    const songId = component.options.songId;
     const isLiked = component.options.isLiked;
     try {
       const result = isLiked
-        ? await songApi.handleSongsAction(SongActions.UNLIKE, this.songId)
-        : await songApi.handleSongsAction(SongActions.LIKE, this.songId);
+        ? await songApi.handleSongsAction(SongActions.UNLIKE, songId)
+        : await songApi.handleSongsAction(SongActions.LIKE, songId);
       const currentLocation = router.getCurrentLocation();
       if (currentLocation.url === "songs/favourites") {
         const rerenderEvent = CustomEvents.get("rerenderTrackList")({
@@ -43,7 +45,7 @@ export class LikePresenter extends Presenter {
       }
       if (isSong(result)) {
         const songLikeEvent = CustomEvents.get("songLike")({
-          songId: this.songId,
+          songId: songId,
           isLiked: checkLike(result, userApi.currUsername),
         });
         EventBus.dispatchEvent(songLikeEvent);
@@ -64,7 +66,7 @@ export class LikePresenter extends Presenter {
   //synchronization between likes in playlist and in player
   private onLikeCustom(e: CustomEventInit, component: Component) {
     const { songId, isLiked } = e.detail;
-    if (this.songId === songId) {
+    if (component.options.songId === songId) {
       component.options = {
         ...component.options,
         isLiked,

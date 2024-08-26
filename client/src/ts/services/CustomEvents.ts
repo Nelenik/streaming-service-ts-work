@@ -29,3 +29,9 @@ CustomEvents.set(
   "songProgress",
   (detail: { progress: number }) => new CustomEvent("songProgress", { detail })
 );
+
+//song to play
+CustomEvents.set(
+  "playSong",
+  (detail: { songId: number }) => new CustomEvent("playSong", { detail })
+);

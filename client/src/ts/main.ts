@@ -40,7 +40,8 @@ try {
         data.listType,
         Number(params?.id) || null
       );
-      footerPresenter.drawPlayerParts();
+      footerPresenter.renewSongsQueue();
+      await footerPresenter.updatePlayerView();
     }
   });
 

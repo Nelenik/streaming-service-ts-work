@@ -1,6 +1,6 @@
 import { SongComponent, SongMenu } from "components/songs";
 import { Component, Presenter } from "core";
-import { ImageService } from "services";
+import { CustomEvents, EventBus, ImageService } from "services";
 import { Models, Song, ModalType } from "types";
 import noImage from "img/no-image.jpg";
 import { ActiveDrop } from "./SongsListPresenter";
@@ -9,7 +9,6 @@ import { checkLike } from "helpers";
 
 export class SongPresenter extends Presenter {
   songComponent!: Component;
-  likeComponent!: Component;
   modalPresenter: ModalPresenter | null = null;
 
   constructor(
@@ -29,13 +28,12 @@ export class SongPresenter extends Presenter {
   }
 
   private async renderSongComponent() {
-    const { id, duration, createdAt, name, artist, album, image } =
-      this.songData;
+    const { duration, createdAt, name, artist, album, image } = this.songData;
 
     const result = await ImageService.instance.invokeUrl(image);
     const cover = result ? result : noImage;
     this.songComponent = new SongComponent({
-      id: id,
+      onPlay: this.onPlaySong,
       duration: Math.trunc(duration / 1000),
       createdAt,
       cover,
@@ -44,6 +42,13 @@ export class SongPresenter extends Presenter {
       albumName: album.name,
       ordinalNum: this.ordinalNum,
     }).mount(".tracks__list", "append");
+  }
+
+  onPlaySong() {
+    const playSongEvent = CustomEvents.get("playSong")({
+      songId: this.songData.id,
+    });
+    EventBus.dispatchEvent(playSongEvent);
   }
 
   private renderLikeComponent() {

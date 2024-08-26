@@ -1,11 +1,9 @@
 import { Component, ComponentOptions } from "core";
 import { html, getSongDurStr, getDaysAgo } from "helpers";
-// import { Song } from "types";
 
 interface SongOptions extends ComponentOptions {
-  // data: Song;
   ordinalNum: number;
-  id: number;
+  onPlay: () => void;
   duration: number;
   createdAt: string;
   cover: string;
@@ -17,7 +15,6 @@ interface SongOptions extends ComponentOptions {
 export class SongComponent extends Component<SongOptions> {
   getTemplate(): string {
     const {
-      id,
       ordinalNum,
       duration,
       createdAt,
@@ -47,5 +44,14 @@ export class SongComponent extends Component<SongOptions> {
         <time class="tracks__item__time">${trackDur}</time>
       </li>
     `;
+  }
+
+  setHandlers(): void {
+    const link = this.element?.querySelector(".track__name__link");
+    if (!link || !(link instanceof Element)) return;
+    this.on("click", link, (e: Event) => {
+      e.preventDefault();
+      this.options.onPlay();
+    });
   }
 }

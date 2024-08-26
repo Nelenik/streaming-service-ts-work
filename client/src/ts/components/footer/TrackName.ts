@@ -10,7 +10,11 @@ interface TrackNameOptions extends ComponentOptions {
 
 export class TrackName extends Component<TrackNameOptions> {
   getTemplate(): string {
-    const { id, cover, name, artist } = this.options;
+    if (!Object.keys(this.options).length) {
+      return html` <div class="player__track-name flex"></div> `;
+    }
+
+    const { cover, name, artist } = this.options;
     return html`
       <div class="player__track-name flex">
         <img class="player__track__img" src=${cover} alt=${artist} />
