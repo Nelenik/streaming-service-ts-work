@@ -1,3 +1,4 @@
+// import { PlayerStore } from "presenters";
 import { ListType, Playlists, Song } from "types";
 export const EventBus = new EventTarget();
 
@@ -22,4 +23,9 @@ CustomEvents.set(
   "songLike",
   (detail: { songId: number; isLiked: boolean }) =>
     new CustomEvent("songLike", { detail })
+);
+// //player store changes
+CustomEvents.set(
+  "songProgress",
+  (detail: { progress: number }) => new CustomEvent("songProgress", { detail })
 );

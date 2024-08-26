@@ -36,7 +36,7 @@ export class SongPresenter extends Presenter {
     const cover = result ? result : noImage;
     this.songComponent = new SongComponent({
       id: id,
-      duration,
+      duration: Math.trunc(duration / 1000),
       createdAt,
       cover,
       name,
