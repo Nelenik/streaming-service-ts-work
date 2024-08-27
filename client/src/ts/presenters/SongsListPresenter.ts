@@ -3,7 +3,7 @@ import { Component, Presenter } from "core";
 import { SongPresenter } from "./SongPresenter";
 import { isPlaylist, isSongList, ListType, Models, Song } from "types";
 import { PlaylistActions, SongActions } from "models";
-import { DataStore } from "services";
+import { DataStore } from "storages";
 
 export type ActiveDrop = {
   active: SongMenu | null;

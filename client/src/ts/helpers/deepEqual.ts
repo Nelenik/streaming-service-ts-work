@@ -8,7 +8,7 @@
 //   | boolean;
 export type CameInValue = { [key: string]: unknown };
 
-export function deepEqual(obj1: CameInValue, obj2: CameInValue): boolean {
+export function deepEqual<T extends object>(obj1: T, obj2: T): boolean {
   if (isObject(obj1) && isObject(obj2)) {
     if (!isBothObjectsArrayOrObj(obj1, obj2)) return false;
 
@@ -19,10 +19,10 @@ export function deepEqual(obj1: CameInValue, obj2: CameInValue): boolean {
 
     return keys1.every((key: string): boolean => {
       if (!keys2.includes(key)) return false;
-      const value1: unknown = obj1[key];
-      const value2: unknown = obj2[key];
+      const value1 = obj1[key as keyof T];
+      const value2 = obj2[key as keyof T];
       if (value1 === value2) return true;
-      return deepEqual(value1 as CameInValue, value2 as CameInValue);
+      return deepEqual(value1 as T, value2 as T);
     });
   } else {
     return false;

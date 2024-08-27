@@ -1,9 +1,12 @@
 import { Component, ComponentOptions } from "core";
 import { getSongDurStr, html } from "helpers";
+import { EventBus } from "services";
 
 interface ControlsOptions extends ComponentOptions {
   progress: number;
   duration: number;
+  onOff: () => void;
+  onRange: (e: Event) => void;
 }
 
 export class Controls extends Component<ControlsOptions> {
@@ -52,19 +55,37 @@ export class Controls extends Component<ControlsOptions> {
           </button>
           <button class="player__play-btn">
             <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
+              class="play-icon"
+              width="13"
+              height="16"
+              viewBox="0 0 13 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z"
-                fill="#AAAAAA"
+                d="M12.0385 9.41375C11.9679 9.48625 11.7012 9.79625 11.4528 10.0512C9.99635 11.655 6.19703 14.28 4.20848 15.0812C3.90648 15.21 3.14296 15.4825 2.73502 15.5C2.34413 15.5 1.97151 15.41 1.61593 15.2275C1.17267 14.9725 0.817097 14.5713 0.62226 14.0975C0.496834 13.7688 0.301997 12.785 0.301997 12.7675C0.10716 11.6913 0 9.9425 0 8.01C0 6.16875 0.10716 4.49125 0.266683 3.39875C0.284949 3.38125 0.479786 2.15875 0.692888 1.74C1.08378 0.975 1.8473 0.5 2.66439 0.5H2.73502C3.26717 0.51875 4.38626 0.99375 4.38626 1.01125C6.26766 1.81375 9.9793 4.31 11.471 5.96875C11.471 5.96875 11.8911 6.395 12.0738 6.66125C12.3587 7.04375 12.5 7.5175 12.5 7.99125C12.5 8.52 12.3405 9.0125 12.0385 9.41375Z"
+                fill="white"
+              />
+            </svg>
+            <svg
+              class="pause-icon"
+              width="15"
+              height="16"
+              viewBox="0 0 15 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2 2L2 14"
+                stroke="white"
+                stroke-width="4"
+                stroke-linecap="round"
               />
               <path
-                d="M27.0385 21.4138C26.9679 21.4862 26.7012 21.7962 26.4528 22.0512C24.9963 23.655 21.197 26.28 19.2085 27.0813C18.9065 27.21 18.143 27.4825 17.735 27.5C17.3441 27.5 16.9715 27.41 16.6159 27.2275C16.1727 26.9725 15.8171 26.5713 15.6223 26.0975C15.4968 25.7688 15.302 24.785 15.302 24.7675C15.1072 23.6913 15 21.9425 15 20.01C15 18.1688 15.1072 16.4913 15.2667 15.3988C15.2849 15.3812 15.4798 14.1588 15.6929 13.74C16.0838 12.975 16.8473 12.5 17.6644 12.5H17.735C18.2672 12.5187 19.3863 12.9938 19.3863 13.0113C21.2677 13.8138 24.9793 16.31 26.471 17.9688C26.471 17.9688 26.8911 18.395 27.0738 18.6613C27.3587 19.0437 27.5 19.5175 27.5 19.9913C27.5 20.52 27.3405 21.0125 27.0385 21.4138Z"
-                fill="white"
+                d="M13 2V14"
+                stroke="white"
+                stroke-width="4"
+                stroke-linecap="round"
               />
             </svg>
           </button>
@@ -124,5 +145,34 @@ export class Controls extends Component<ControlsOptions> {
         </div>
       </div>
     `;
+  }
+
+  setHandlers(): void {
+    this.onPlay();
+    this.onRange();
+  }
+
+  onPlay() {
+    const { onOff } = this.options;
+    const onOffBtn = this.element?.querySelector(".player__play-btn");
+    if (!onOffBtn || !(onOffBtn instanceof Element)) return;
+    this.on("click", onOffBtn, () => {
+      onOff();
+    });
+  }
+
+  onRange() {
+    const { onRange } = this.options;
+    const rangeInput = this.element?.querySelector("#range-play");
+    if (!(rangeInput instanceof HTMLInputElement)) return;
+    this.on("input", rangeInput, (e: Event) => {
+      onRange(e);
+    });
+
+    this.on("songProgress", EventBus, (e: CustomEventInit) => {
+      const { progress, duration } = e.detail;
+      rangeInput.max = duration;
+      rangeInput.value = progress;
+    });
   }
 }

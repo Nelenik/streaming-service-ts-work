@@ -1089,6 +1089,29 @@ body {
   margin-bottom: 10px;
 }
 
+.player__play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #AAAAAA;
+  position: relative;
+
+  & svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+
+  & .play-icon {
+    left: 55%;
+  }
+
+  & .pause-icon {
+    opacity: 0
+  }
+}
+
 .player__shaffle-btn svg,
 .player__repeat-btn svg {
   width: 18px;

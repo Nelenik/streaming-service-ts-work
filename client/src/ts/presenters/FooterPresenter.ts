@@ -3,9 +3,10 @@ import { Component, Presenter } from "core";
 import { checkLike } from "helpers";
 import { LikePresenter } from "presenters";
 import { Models, Song } from "types";
-import { DataStore, EventBus, ImageService } from "services";
+import { EventBus, ImageService, Player } from "services";
 import { PlayerVolume } from "components/footer/PlayerVolume";
 import noImage from "img/no-image.jpg";
+import { PlayerStore } from "storages";
 
 type FooterPresenterModels = Pick<Models, "userApi" | "songApi">;
 
@@ -15,13 +16,18 @@ export class FooterPresenter extends Presenter {
   volumeComponent!: Component;
   trackNameComponent!: Component;
 
-  actualPlaylist: Song[] = [];
-  pervSong: Song | null = null;
-  nextSong: Song | null = null;
-  currentSong: Song | null = null;
-
   constructor(private models: FooterPresenterModels) {
     super();
+    EventBus.addEventListener("playSong", async (e: CustomEventInit) => {
+      const { songId } = e.detail;
+      PlayerStore.instance.playSongById(songId);
+      await this.launchCurrentSong(true, 0, true);
+    });
+
+    EventBus.addEventListener("songProgress", (e: CustomEventInit) => {
+      const { progress } = e.detail;
+      PlayerStore.instance.progress = progress;
+    });
   }
   init() {
     this.footerComponent = new Footer().mount("#app", "append");
@@ -30,18 +36,37 @@ export class FooterPresenter extends Presenter {
     this.volumeComponent = new PlayerVolume().mount(".player", "append");
   }
 
-  renewSongsQueue() {
-    this.actualPlaylist = [...DataStore.instance.getSongsList()];
-    if (!this.currentSong) {
-      this.currentSong = this.actualPlaylist[0];
-    } else {
-      this.nextSong = this.actualPlaylist[0];
-    }
+  async launchCurrentSong(
+    autoplay: boolean = false,
+    progress: number = 0,
+    isPlaying: boolean = false
+  ) {
+    const currentSong = PlayerStore.instance.currentSong;
+    console.log(currentSong);
+    await this.updatePlayerView(currentSong);
+    Player.playSong(currentSong, {
+      onPlay: () => {
+        PlayerStore.instance.isPlaying = Player.isPlaying();
+      },
+      onPause: () => {
+        PlayerStore.instance.isPlaying = Player.isPlaying();
+      },
+      onLoad: () => {
+        Player.goTo(progress);
+        if (isPlaying && autoplay) {
+          Player.play();
+        }
+      },
+      onEnd: async () => {
+        PlayerStore.instance.playNexttSong();
+        await this.launchCurrentSong(true);
+      },
+    });
   }
 
-  async updatePlayerView() {
-    if (!this.currentSong) return;
-    const { id, name, artist, image, duration } = this.currentSong;
+  async updatePlayerView(currentSong: Song | null) {
+    if (!currentSong) return;
+    const { id, name, artist, image, duration } = currentSong;
     const result = await ImageService.instance.invokeUrl(image);
     const cover = result ? result : noImage;
 
@@ -62,13 +87,31 @@ export class FooterPresenter extends Presenter {
     new LikePresenter(
       this.models,
       footerLikeParent,
-      checkLike(this.currentSong, this.models.userApi.currUsername),
+      checkLike(currentSong, this.models.userApi.currUsername),
       id
     ).init();
 
     this.controlsComponent.options = {
+      onOff: this.pausePlayHandler,
+      onRange: this.onRangeChange,
       progress: 0,
       duration: Math.trunc(duration / 1000),
     };
+  }
+
+  pausePlayHandler() {
+    const isPlaying = Player.isPlaying();
+
+    if (isPlaying) {
+      Player.pause();
+    } else {
+      Player.play();
+    }
+  }
+
+  onRangeChange(e: Event) {
+    const target = e.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    Player.goTo(Number(target.value));
   }
 }

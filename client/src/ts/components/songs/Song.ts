@@ -1,9 +1,10 @@
 import { Component, ComponentOptions } from "core";
 import { html, getSongDurStr, getDaysAgo } from "helpers";
+import { CustomEvents, EventBus } from "services";
 
 interface SongOptions extends ComponentOptions {
+  songId: number;
   ordinalNum: number;
-  onPlay: () => void;
   duration: number;
   createdAt: string;
   cover: string;
@@ -47,11 +48,15 @@ export class SongComponent extends Component<SongOptions> {
   }
 
   setHandlers(): void {
+    const { songId } = this.options;
     const link = this.element?.querySelector(".track__name__link");
     if (!link || !(link instanceof Element)) return;
     this.on("click", link, (e: Event) => {
       e.preventDefault();
-      this.options.onPlay();
+      const playSongEvent = CustomEvents.get("playSong")({
+        songId,
+      });
+      EventBus.dispatchEvent(playSongEvent);
     });
   }
 }

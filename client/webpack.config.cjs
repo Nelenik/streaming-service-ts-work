@@ -80,6 +80,7 @@ const config = {
       mocks: path.resolve(__dirname, "src/mocks"),
       core: path.resolve(__dirname, "src/ts/core"),
       presenters: path.resolve(__dirname, "src/ts/presenters"),
+      storages: path.resolve(__dirname, "src/ts/storages"),
       styles: path.resolve(__dirname, "src/styles"),
       services: path.resolve(__dirname, "src/ts/services"),
       models: path.resolve(__dirname, "src/ts/models"),

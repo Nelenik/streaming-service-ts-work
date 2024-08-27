@@ -35,6 +35,10 @@ export class PlayerVolume extends Component {
           type="range"
           id="range-value"
           class="player__value-range range"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.5"
         />
       </div>
     `;

@@ -4,7 +4,8 @@ import { Component, Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
 import { isPlaylists, isSongList, ListType } from "types";
-import { DataStore, EventBus } from "services";
+import { EventBus } from "services";
+import { DataStore } from "storages";
 
 interface LayoutPresenterModels {
   userApi: UserModel;

@@ -12,7 +12,6 @@ export interface LikeOptions extends ComponentOptions {
 export class Like extends Component<LikeOptions> {
   constructor(options: LikeOptions) {
     super(options);
-    console.log("new like is created");
   }
   getTemplate(): string {
     const { isLiked } = this.options;

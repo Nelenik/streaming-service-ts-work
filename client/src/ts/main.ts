@@ -5,6 +5,8 @@ import { authApi, userApi, songApi, playlistApi } from "models";
 import { isListType, Login } from "types";
 import { ImageService, router } from "./services";
 import { FooterPresenter } from "./presenters/FooterPresenter";
+import { DataStore } from "./storages";
+import { PlayerStore } from "./storages/PlayerStore";
 
 window.addEventListener("beforeunload", () => {
   ImageService.instance.clearAllUrls();
@@ -40,8 +42,19 @@ try {
         data.listType,
         Number(params?.id) || null
       );
-      footerPresenter.renewSongsQueue();
-      await footerPresenter.updatePlayerView();
+      PlayerStore.instance.actualPlaylist = [
+        ...DataStore.instance.getSongsList(),
+      ];
+
+      console.log(
+        PlayerStore.instance.progress,
+        PlayerStore.instance.isPlaying
+      );
+      await footerPresenter.launchCurrentSong(
+        true,
+        PlayerStore.instance.progress,
+        PlayerStore.instance.isPlaying
+      );
     }
   });
 

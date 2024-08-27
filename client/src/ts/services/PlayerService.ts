@@ -4,50 +4,87 @@ import { Howl } from "howler";
 import { CustomEvents, EventBus } from "services";
 import { NOOP } from "helpers";
 
+interface PlaySongHadlers {
+  onPlay?: () => void;
+  onEnd?: () => void;
+  onPause?: () => void;
+  onLoad?: () => void;
+}
+
 export class PlayerService {
   sound: Howl | null = null;
   private progressTimeout: number = 0;
 
-  playSong(song: Song, onPlay: () => void = NOOP, onEnd: () => void = NOOP) {
+  playSong(song: Song | null, handlers: PlaySongHadlers) {
+    if (!song) return;
+    const {
+      onPlay = NOOP,
+      onEnd = NOOP,
+      onPause = NOOP,
+      onLoad = NOOP,
+    } = handlers;
     if (this.sound) {
       this.sound.unload();
       this.sound = null;
+      clearTimeout(this.progressTimeout);
     }
 
     this.sound = new Howl({
       src: [`http://localhost:3000${song.path}`],
       html5: true,
+      volume: 0.5,
       onplay: () => {
         onPlay();
-        this.showProgress();
       },
       onend: () => {
         onEnd();
-        window.clearTimeout(this.progressTimeout);
+        clearTimeout(this.progressTimeout);
+      },
+      onpause: () => {
+        onPause();
+      },
+      onload: () => {
+        onLoad();
       },
     });
-    this.play();
   }
   play() {
     this.sound?.play();
+    this.showProgress();
   }
   pause() {
     this.sound?.pause();
+    clearTimeout(this.progressTimeout);
   }
-  resume() {
-    this.sound?.play();
+
+  goTo(value: number) {
+    this.sound?.seek(value);
+  }
+
+  isPlaying(): boolean {
+    if (!this.sound) return false;
+    return this.sound?.playing();
   }
 
   private showProgress() {
     const progress = this.sound?.seek();
-    const progressEvent = CustomEvents.get("songProgress")(progress);
+    const duration = this.sound?.duration();
+    const progressEvent = CustomEvents.get("songProgress")({
+      progress,
+      duration,
+    });
     EventBus.dispatchEvent(progressEvent);
-    this.progressTimeout = window.setTimeout(this.showProgress, 1000);
+    this.progressTimeout = window.setTimeout(
+      this.showProgress.bind(this),
+      1000
+    );
   }
 
   updateProgress(value: number) {
     this.sound?.seek(value);
   }
 
-  static player = new PlayerService();
+  // static player = new PlayerService();
 }
+
+export const Player = new PlayerService();

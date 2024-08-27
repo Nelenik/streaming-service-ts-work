@@ -1,7 +1,8 @@
 import { Header, Profile, Search } from "components/header";
 import { Presenter } from "core";
 import { Models, Playlists, Song } from "types";
-import { CustomEvents, DataStore, EventBus, router } from "services";
+import { CustomEvents, EventBus, router } from "services";
+import { DataStore } from "storages";
 
 type HeaderPresenterModels = Pick<Models, "userApi">;
 

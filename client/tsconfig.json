@@ -17,6 +17,7 @@
       "mocks": ["src/mocks"],
       "core": ["src/ts/core"],
       "presenters": ["src/ts/presenters"],
+      "storages":["src/ts/storages"],
       "styles" : ["src/styles"],
       "services" : ["src/ts/services"],
       "models" : ["src/ts/models"]

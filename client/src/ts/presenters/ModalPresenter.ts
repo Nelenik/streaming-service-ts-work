@@ -4,7 +4,8 @@ import { Note } from "components/notes";
 import { Component, Presenter } from "core";
 import { formPlaylistViewData, wait } from "helpers";
 import { PlaylistActions } from "models";
-import { CustomEvents, DataStore, EventBus, Modal } from "services";
+import { CustomEvents, EventBus, Modal } from "services";
+import { DataStore } from "storages";
 import { ModalType, Models } from "types";
 
 type ModalPresenterModels = Pick<Models, "playlistApi" | "userApi">;
