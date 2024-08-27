@@ -2,7 +2,7 @@ import "../index.html";
 import "../styles/style.scss";
 import { HeaderPresenter, LayoutPresenter } from "presenters";
 import { authApi, userApi, songApi, playlistApi } from "models";
-import { isListType, Login } from "types";
+import { isListType, Login, Signup } from "types";
 import { ImageService, router } from "./services";
 import { FooterPresenter } from "./presenters/FooterPresenter";
 import { DataStore } from "./storages";
