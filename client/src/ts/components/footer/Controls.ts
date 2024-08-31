@@ -134,6 +134,7 @@ export class Controls extends Component<ControlsOptions> {
             id="range-play"
             class="player__range-play range"
             min="0"
+            max="${duration}"
             value="0"
           />
           <input
@@ -169,9 +170,9 @@ export class Controls extends Component<ControlsOptions> {
       onRange(e);
     });
 
-    this.on("songProgress", EventBus, (e: CustomEventInit) => {
+    this.on("songPlayback", EventBus, (e: CustomEventInit) => {
       const { progress, duration } = e.detail;
-      rangeInput.max = duration;
+      console.log("duration from songPlayback", duration);
       rangeInput.value = progress;
     });
   }

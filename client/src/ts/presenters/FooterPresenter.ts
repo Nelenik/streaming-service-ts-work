@@ -24,7 +24,7 @@ export class FooterPresenter extends Presenter {
       await this.launchCurrentSong(true, 0, true);
     });
 
-    EventBus.addEventListener("songProgress", (e: CustomEventInit) => {
+    EventBus.addEventListener("songPlayback", (e: CustomEventInit) => {
       const { progress } = e.detail;
       PlayerStore.instance.progress = progress;
     });
@@ -42,10 +42,11 @@ export class FooterPresenter extends Presenter {
     isPlaying: boolean = false
   ) {
     const currentSong = PlayerStore.instance.currentSong;
-    console.log(currentSong);
+    // console.log(currentSong);
     await this.updatePlayerView(currentSong);
     Player.playSong(currentSong, {
       onPlay: () => {
+        console.log(Player.sound?.seek());
         PlayerStore.instance.isPlaying = Player.isPlaying();
       },
       onPause: () => {
@@ -59,12 +60,12 @@ export class FooterPresenter extends Presenter {
       },
       onEnd: async () => {
         PlayerStore.instance.playNexttSong();
-        await this.launchCurrentSong(true);
+        await this.launchCurrentSong(true, 0, true);
       },
     });
   }
 
-  async updatePlayerView(currentSong: Song | null) {
+  async updatePlayerView(currentSong: Song | null): Promise<void> {
     if (!currentSong) return;
     const { id, name, artist, image, duration } = currentSong;
     const result = await ImageService.instance.invokeUrl(image);
@@ -92,14 +93,14 @@ export class FooterPresenter extends Presenter {
     ).init();
 
     this.controlsComponent.options = {
-      onOff: this.pausePlayHandler,
-      onRange: this.onRangeChange,
+      onOff: this.onOffHandler,
+      onRange: this.rangeHandler,
       progress: 0,
-      duration: Math.trunc(duration / 1000),
+      duration: Math.round(duration / 1000),
     };
   }
 
-  pausePlayHandler() {
+  onOffHandler(): void {
     const isPlaying = Player.isPlaying();
 
     if (isPlaying) {
@@ -109,9 +110,10 @@ export class FooterPresenter extends Presenter {
     }
   }
 
-  onRangeChange(e: Event) {
+  rangeHandler(e: Event): void {
     const target = e.target;
     if (!(target instanceof HTMLInputElement)) return;
+    console.log("rangevalue", target.value);
     Player.goTo(Number(target.value));
   }
 }

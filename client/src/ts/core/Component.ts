@@ -31,6 +31,9 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   }
 
   getElement(): Element {
+    //remove eventlisteners before element updating
+    this.unsetHandlers();
+
     const newElement = createElement(this.getTemplate());
     if (this._element === null) {
       this._element = newElement;
@@ -47,6 +50,8 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   }
 
   setHandlers(): void {}
+
+  unsetHandlers(): void {}
 
   mount(
     selectorOrElement: null | string | Element,

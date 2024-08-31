@@ -34,7 +34,7 @@ export class PlayerStore {
     }
   }
 
-  set currentSong(value: Song | null) {
+  private set currentSong(value: Song | null) {
     this._currentSong = value;
   }
 
@@ -42,7 +42,7 @@ export class PlayerStore {
     return this._currentSong;
   }
 
-  private updateHistory() {
+  private updateHistory(): void {
     const historyMaxSize = 5;
     if (this.currentSong) {
       this.playerHistory.push(this.currentSong);
@@ -56,7 +56,7 @@ export class PlayerStore {
       (el) => el.id === this.currentSong?.id
     );
     const nextIndex = currentSongIndex + 1;
-    switch (this.mode) {
+    switch (this._mode) {
       case "def":
       case "shuffle": {
         return nextIndex > this._actualPlaylist.length - 1 ? -1 : nextIndex;
@@ -72,15 +72,15 @@ export class PlayerStore {
     }
   }
 
-  playSongById(id: number) {
+  playSongById(id: number): void {
     this.currentSong = this._actualPlaylist.find((el) => el.id === id) || null;
   }
 
-  playPrevSong() {
+  playPrevSong(): void {
     this.currentSong = this.playerHistory.pop() || null;
   }
 
-  playNexttSong() {
+  playNexttSong(): void {
     this.updateHistory();
     const nextIndex = this.getNextSongIndex();
     this.currentSong =

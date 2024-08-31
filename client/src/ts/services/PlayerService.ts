@@ -15,7 +15,7 @@ export class PlayerService {
   sound: Howl | null = null;
   private progressTimeout: number = 0;
 
-  playSong(song: Song | null, handlers: PlaySongHadlers) {
+  playSong(song: Song | null, handlers: PlaySongHadlers): void {
     if (!song) return;
     const {
       onPlay = NOOP,
@@ -48,16 +48,16 @@ export class PlayerService {
       },
     });
   }
-  play() {
+  play(): void {
     this.sound?.play();
-    this.showProgress();
+    this.dispatchPlaybackData();
   }
-  pause() {
+  pause(): void {
     this.sound?.pause();
     clearTimeout(this.progressTimeout);
   }
 
-  goTo(value: number) {
+  goTo(value: number): void {
     this.sound?.seek(value);
   }
 
@@ -66,25 +66,23 @@ export class PlayerService {
     return this.sound?.playing();
   }
 
-  private showProgress() {
+  private dispatchPlaybackData(): void {
     const progress = this.sound?.seek();
     const duration = this.sound?.duration();
-    const progressEvent = CustomEvents.get("songProgress")({
+    const playbackEvent = CustomEvents.get("songPlayback")({
       progress,
       duration,
     });
-    EventBus.dispatchEvent(progressEvent);
+    EventBus.dispatchEvent(playbackEvent);
     this.progressTimeout = window.setTimeout(
-      this.showProgress.bind(this),
+      this.dispatchPlaybackData.bind(this),
       1000
     );
   }
 
-  updateProgress(value: number) {
+  updateProgress(value: number): void {
     this.sound?.seek(value);
   }
-
-  // static player = new PlayerService();
 }
 
 export const Player = new PlayerService();

@@ -2,7 +2,7 @@ import "../index.html";
 import "../styles/style.scss";
 import { HeaderPresenter, LayoutPresenter } from "presenters";
 import { authApi, userApi, songApi, playlistApi } from "models";
-import { isListType, Login, Signup } from "types";
+import { isListType, Login } from "types";
 import { ImageService, router } from "./services";
 import { FooterPresenter } from "./presenters/FooterPresenter";
 import { DataStore } from "./storages";
@@ -45,11 +45,6 @@ try {
       PlayerStore.instance.actualPlaylist = [
         ...DataStore.instance.getSongsList(),
       ];
-
-      console.log(
-        PlayerStore.instance.progress,
-        PlayerStore.instance.isPlaying
-      );
       await footerPresenter.launchCurrentSong(
         true,
         PlayerStore.instance.progress,

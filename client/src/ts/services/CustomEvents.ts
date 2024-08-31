@@ -26,8 +26,8 @@ CustomEvents.set(
 );
 // //player store changes
 CustomEvents.set(
-  "songProgress",
-  (detail: { progress: number }) => new CustomEvent("songProgress", { detail })
+  "songPlayback",
+  (detail: { progress: number }) => new CustomEvent("songPlayback", { detail })
 );
 
 //song to play
