@@ -2,13 +2,18 @@ import { render, createElement } from "core";
 import { InsertMethods } from "types";
 import { deepEqual, getContainer } from "helpers";
 
-const NOOP = () => {};
-
 export interface ComponentOptions {
   [key: string]: unknown;
 }
 export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   private _element: HTMLElement | null = null;
+
+  private componentHandlers: Array<{
+    target: EventTarget;
+    eventType: string;
+    listener: EventListenerOrEventListenerObject;
+    options?: AddEventListenerOptions;
+  }> = [];
 
   constructor(protected _options: T = {} as T) {
     this.getElement();
@@ -45,13 +50,20 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
     return this._element;
   }
   removeElement(): Component {
+    this.unsetHandlers();
     this._element = null;
     return this;
   }
 
   setHandlers(): void {}
 
-  unsetHandlers(): void {}
+  unsetHandlers(): void {
+    this.componentHandlers.forEach((handlerData) => {
+      const { eventType, target, listener, options } = handlerData;
+      target.removeEventListener(eventType, listener, options);
+    });
+    this.componentHandlers = [];
+  }
 
   mount(
     selectorOrElement: null | string | Element,
@@ -73,13 +85,19 @@ export abstract class Component<T extends ComponentOptions = ComponentOptions> {
     options?: AddEventListenerOptions
   ) {
     element.addEventListener(eventType, listener, options);
+    this.componentHandlers.push({
+      target: element,
+      eventType,
+      listener,
+      options,
+    });
   }
-  off(
-    eventType: string,
-    element: EventTarget,
-    listener: EventListenerOrEventListenerObject = NOOP,
-    options?: AddEventListenerOptions
-  ) {
-    element.removeEventListener(eventType, listener, options);
-  }
+  // off(
+  //   eventType: string,
+  //   element: EventTarget,
+  //   listener: EventListenerOrEventListenerObject = NOOP,
+  //   options?: AddEventListenerOptions
+  // ) {
+  //   element.removeEventListener(eventType, listener, options);
+  // }
 }
