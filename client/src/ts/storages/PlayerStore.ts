@@ -12,6 +12,7 @@ export class PlayerStore {
 
   progress: number = 0;
   isPlaying: boolean = false;
+  isMuted: boolean = false;
 
   set mode(value: PlayerMode) {
     this._mode = value;
@@ -72,15 +73,15 @@ export class PlayerStore {
     }
   }
 
-  playSongById(id: number): void {
+  getSongById(id: number): void {
     this.currentSong = this._actualPlaylist.find((el) => el.id === id) || null;
   }
 
-  playPrevSong(): void {
+  getPrevSong(): void {
     this.currentSong = this.playerHistory.pop() || null;
   }
 
-  playNexttSong(): void {
+  getNextSong(): void {
     this.updateHistory();
     const nextIndex = this.getNextSongIndex();
     this.currentSong =

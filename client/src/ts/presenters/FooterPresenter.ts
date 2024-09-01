@@ -20,8 +20,8 @@ export class FooterPresenter extends Presenter {
     super();
     EventBus.addEventListener("playSong", async (e: CustomEventInit) => {
       const { songId } = e.detail;
-      PlayerStore.instance.playSongById(songId);
-      await this.launchCurrentSong(true, 0, true);
+      PlayerStore.instance.getSongById(songId);
+      await this.launchCurrentSong(0, true);
     });
 
     EventBus.addEventListener("songPlayback", (e: CustomEventInit) => {
@@ -37,30 +37,29 @@ export class FooterPresenter extends Presenter {
   }
 
   async launchCurrentSong(
-    autoplay: boolean = false,
     progress: number = 0,
-    isPlaying: boolean = false
-  ) {
+    playImmediately: boolean = false
+  ): Promise<void> {
     const currentSong = PlayerStore.instance.currentSong;
-    // console.log(currentSong);
     await this.updatePlayerView(currentSong);
     Player.playSong(currentSong, {
       onPlay: () => {
-        console.log(Player.sound?.seek());
         PlayerStore.instance.isPlaying = Player.isPlaying();
+        this.switchPlayBtnIcon(false);
       },
       onPause: () => {
         PlayerStore.instance.isPlaying = Player.isPlaying();
+        this.switchPlayBtnIcon(true);
       },
       onLoad: () => {
         Player.goTo(progress);
-        if (isPlaying && autoplay) {
+        if (playImmediately) {
           Player.play();
         }
       },
       onEnd: async () => {
-        PlayerStore.instance.playNexttSong();
-        await this.launchCurrentSong(true, 0, true);
+        PlayerStore.instance.getNextSong();
+        await this.launchCurrentSong(0, true);
       },
     });
   }
@@ -95,13 +94,26 @@ export class FooterPresenter extends Presenter {
     this.controlsComponent.options = {
       onOff: this.onOffHandler,
       onRange: this.rangeHandler,
+      onSkip: this.skipHandler.bind(this),
       progress: 0,
       duration: Math.round(duration / 1000),
     };
+    this.volumeComponent.options = {
+      onVolume: this.volumeHandler,
+      onMute: this.muteHandler,
+    };
+  }
+  //change svg icon at the play btn
+  switchPlayBtnIcon(play: boolean): void {
+    const playBtn = document.querySelector(".player__play-btn");
+    playBtn?.classList.toggle("is-playing", !play);
+    playBtn?.classList.toggle("is-paused", play);
   }
 
-  onOffHandler(): void {
+  onOffHandler(e: Event): void {
     const isPlaying = Player.isPlaying();
+    const target = e.currentTarget;
+    if (!target || !(target instanceof HTMLElement)) return;
 
     if (isPlaying) {
       Player.pause();
@@ -113,7 +125,36 @@ export class FooterPresenter extends Presenter {
   rangeHandler(e: Event): void {
     const target = e.target;
     if (!(target instanceof HTMLInputElement)) return;
-    console.log("rangevalue", target.value);
     Player.goTo(Number(target.value));
+  }
+
+  volumeHandler(e: Event): void {
+    const target = e.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    const volumeValue = Number(target.value);
+    Player.volume(Number(volumeValue));
+  }
+
+  muteHandler(e: Event): void {
+    const target = e.target;
+    if (target && target instanceof HTMLElement) {
+      const newMuteState = !PlayerStore.instance.isMuted;
+      Player.mute(newMuteState);
+      PlayerStore.instance.isMuted = newMuteState;
+      target.classList.toggle("is-muted", newMuteState);
+    }
+  }
+
+  async skipHandler(skipTo: "next" | "prev"): Promise<void> {
+    switch (skipTo) {
+      case "next": {
+        PlayerStore.instance.getNextSong();
+        break;
+      }
+      case "prev": {
+        PlayerStore.instance.getPrevSong();
+      }
+    }
+    await this.launchCurrentSong(0, true);
   }
 }

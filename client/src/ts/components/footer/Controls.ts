@@ -1,12 +1,14 @@
 import { Component, ComponentOptions } from "core";
 import { getSongDurStr, html } from "helpers";
 import { EventBus } from "services";
+import { isPrevOrNext } from "types";
 
 interface ControlsOptions extends ComponentOptions {
   progress: number;
   duration: number;
-  onOff: () => void;
+  onOff: (e: Event) => void;
   onRange: (e: Event) => void;
+  onSkip: (skipTo: "next" | "prev") => Promise<void>;
 }
 
 export class Controls extends Component<ControlsOptions> {
@@ -39,7 +41,7 @@ export class Controls extends Component<ControlsOptions> {
               />
             </svg>
           </button>
-          <button class="player__skipback-btn">
+          <button class="player__skip-btn" data-skip="prev">
             <svg
               width="16"
               height="16"
@@ -53,7 +55,7 @@ export class Controls extends Component<ControlsOptions> {
               />
             </svg>
           </button>
-          <button class="player__play-btn">
+          <button class="player__play-btn is-paused">
             <svg
               class="play-icon"
               width="13"
@@ -89,16 +91,16 @@ export class Controls extends Component<ControlsOptions> {
               />
             </svg>
           </button>
-          <button class="player__skipnext-btn">
+          <button class="player__skip-btn" data-skip="next">
             <svg
-              width="10"
-              height="12"
-              viewBox="0 0 10 12"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M10 0.5V11.5C10 11.6326 9.94732 11.7598 9.85355 11.8536C9.75979 11.9473 9.63261 12 9.5 12C9.36739 12 9.24021 11.9473 9.14645 11.8536C9.05268 11.7598 9 11.6326 9 11.5V6.89151L1.52148 11.4618C1.36989 11.5544 1.19636 11.605 1.01873 11.6083C0.841109 11.6116 0.665804 11.5676 0.510852 11.4807C0.355901 11.3938 0.226897 11.2672 0.137111 11.1139C0.0473251 10.9606 -1.32783e-06 10.7861 0 10.6085V1.39154C-2.12292e-06 1.21389 0.0473207 1.03944 0.137101 0.886149C0.226881 0.732854 0.355877 0.606243 0.51082 0.519338C0.665764 0.432434 0.841061 0.388374 1.01868 0.39169C1.1963 0.395007 1.36983 0.44558 1.52142 0.538208L9 5.10846V0.5C9 0.367392 9.05268 0.240215 9.14645 0.146447C9.24021 0.0526785 9.36739 0 9.5 0C9.63261 0 9.75979 0.0526785 9.85355 0.146447C9.94732 0.240215 10 0.367392 10 0.5Z"
+                d="M13 2.5V13.5C13 13.6326 12.9473 13.7598 12.8536 13.8536C12.7598 13.9473 12.6326 14 12.5 14C12.3674 14 12.2402 13.9473 12.1464 13.8536C12.0527 13.7598 12 13.6326 12 13.5V8.89151L4.52148 13.4618C4.36989 13.5544 4.19636 13.605 4.01873 13.6083C3.84111 13.6116 3.6658 13.5676 3.51085 13.4807C3.3559 13.3938 3.2269 13.2672 3.13711 13.1139C3.04733 12.9606 3 12.7861 3 12.6085V3.39154C3 3.21389 3.04732 3.03944 3.1371 2.88615C3.22688 2.73285 3.35588 2.60624 3.51082 2.51934C3.66576 2.43243 3.84106 2.38837 4.01868 2.39169C4.1963 2.39501 4.36983 2.44558 4.52142 2.53821L12 7.10846V2.5C12 2.36739 12.0527 2.24021 12.1464 2.14645C12.2402 2.05268 12.3674 2 12.5 2C12.6326 2 12.7598 2.05268 12.8536 2.14645C12.9473 2.24021 13 2.36739 13 2.5Z"
                 fill="#AAAAAA"
               />
             </svg>
@@ -151,15 +153,14 @@ export class Controls extends Component<ControlsOptions> {
   setHandlers(): void {
     this.onPlay();
     this.onRange();
+    this.onSkip();
   }
 
   onPlay() {
     const { onOff } = this.options;
     const onOffBtn = this.element?.querySelector(".player__play-btn");
     if (!onOffBtn || !(onOffBtn instanceof Element)) return;
-    this.on("click", onOffBtn, () => {
-      onOff();
-    });
+    this.on("click", onOffBtn, onOff);
   }
 
   onRange() {
@@ -171,9 +172,26 @@ export class Controls extends Component<ControlsOptions> {
     });
 
     this.on("songPlayback", EventBus, (e: CustomEventInit) => {
-      const { progress, duration } = e.detail;
-      console.log("duration from songPlayback", duration);
+      const { progress } = e.detail;
       rangeInput.value = progress;
+    });
+  }
+
+  onSkip() {
+    if (!this.element) return;
+    const { onSkip } = this.options;
+    this.on("click", this.element, async (e: Event) => {
+      const target = e.target;
+      if (
+        !target ||
+        !(target instanceof HTMLElement) ||
+        !target.closest(".player__skip-btn")
+      )
+        return;
+      const skipToValue = target.dataset.skip;
+      if (isPrevOrNext(skipToValue)) {
+        await onSkip(skipToValue);
+      }
     });
   }
 }

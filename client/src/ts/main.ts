@@ -46,7 +46,6 @@ try {
         ...DataStore.instance.getSongsList(),
       ];
       await footerPresenter.launchCurrentSong(
-        true,
         PlayerStore.instance.progress,
         PlayerStore.instance.isPlaying
       );

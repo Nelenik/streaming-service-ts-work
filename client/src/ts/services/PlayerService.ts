@@ -32,7 +32,7 @@ export class PlayerService {
     this.sound = new Howl({
       src: [`http://localhost:3000${song.path}`],
       html5: true,
-      volume: 0.5,
+      volume: 0.3,
       onplay: () => {
         onPlay();
       },
@@ -64,6 +64,14 @@ export class PlayerService {
   isPlaying(): boolean {
     if (!this.sound) return false;
     return this.sound?.playing();
+  }
+
+  volume(value: number): void {
+    Howler.volume(value);
+  }
+
+  mute(muted: boolean): void {
+    Howler.mute(muted);
   }
 
   private dispatchPlaybackData(): void {

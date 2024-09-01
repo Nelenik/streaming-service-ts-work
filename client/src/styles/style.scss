@@ -1089,35 +1089,6 @@ body {
   margin-bottom: 10px;
 }
 
-.player__play-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #AAAAAA;
-  position: relative;
-
-  & svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-  }
-
-  & .play-icon {
-    left: 55%;
-  }
-
-  & .pause-icon {
-    opacity: 0
-  }
-}
-
-.player__shaffle-btn svg,
-.player__repeat-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
 .player__controls {
   margin-left: auto;
   max-width: 902px;
@@ -1129,13 +1100,89 @@ body {
 .player__controls__header {
   align-self: center;
   display: flex;
-  align-self: center;
+  gap: 20px;
   margin-bottom: 6px;
+  align-items: center;
+
+
+  & button:not(.player__play-btn) {
+    border-radius: 5px;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+
+    &:hover,
+    &:focus-visible {
+
+      box-shadow: 0px 0px 3px 0px var(--color-promo);
+    }
+
+    &.active-mode {
+      path {
+        fill: var(--color-promo);
+      }
+    }
+  }
 }
 
-.player__controls__header button:not(:last-child) {
-  margin-right: 20px;
+.player__play-btn {
+
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #AAAAAA;
+  position: relative;
+  outline: none;
+  transition: background-color 0.3s ease;
+
+  &.is-playing {
+    --playOpacity: 0;
+    --pauseOpacity: 1;
+  }
+
+  &.is-paused {
+    --playOpacity: 1;
+    --pauseOpacity: 0;
+  }
+
+  & svg {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    transition: opacity 0.2s ease;
+  }
+
+  & .play-icon {
+    left: 55%;
+    opacity: var(--playOpacity);
+  }
+
+  & .pause-icon {
+    opacity: var(--pauseOpacity);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-promo);
+  }
 }
+
+.player__skip-btn {
+  svg {
+
+    pointer-events: none;
+  }
+}
+
+.player__shaffle-btn svg,
+.player__repeat-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+
+
 
 .player__controls__footer {
   display: flex;
@@ -1181,9 +1228,38 @@ body {
   align-self: flex-end;
   display: flex;
   align-items: center;
+}
+
+.player__mute {
+  --opacity: 0;
+  width: 20px;
+  height: 20px;
+  // margin-right: 9px;
+  position: relative;
+
+  &.is-muted {
+    --opacity: 1;
+  }
 
   svg {
-    margin-right: 9px;
+    translate: 0 10%;
+    pointer-events: none;
+  }
+
+  &::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+    width: 15px;
+    height: 1px;
+    background-color: rgb(170, 170, 170);
+    rotate: -0.13turn;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    opacity: var(--opacity);
+    transition: opacity 0.3s ease;
   }
 }
 

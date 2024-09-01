@@ -28,3 +28,7 @@ export function isPlaylists(playlists: unknown): playlists is Playlists {
 export function isListType(val: string | undefined): val is ListType {
   return val === "all" || val === "playlist" || val === "favourites";
 }
+
+export function isPrevOrNext(value: unknown): value is "next" | "prev" {
+  return value === "next" || value === "prev";
+}
