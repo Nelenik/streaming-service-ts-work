@@ -19,14 +19,18 @@ export class Note extends Component<NoteOptions> {
       </div>
     `;
   }
-  show() {
-    if (!this.element) return;
+  show(): Note {
+    if (!this.element) return this;
     NoteService.instance.showNote(this.element);
     wait(0).then(() => {
       this.element?.classList.add("note--show");
     });
+    return this;
   }
-  close() {
+  autoClose(ms: number): void {
+    wait(ms).then(() => this.close());
+  }
+  close(): void {
     this.element?.classList.remove("note--show");
     wait(400).then(() => {
       this.element?.remove();

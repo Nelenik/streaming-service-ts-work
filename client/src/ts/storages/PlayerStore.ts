@@ -1,11 +1,12 @@
-import { shuffleArray } from "helpers";
-import { PlayerMode, Song } from "types";
+import { Note } from "components/notes";
+import { Song } from "types";
 
 export class PlayerStore {
+  private HISTORY_MAX_SIZE: number = 5;
   static instance = new PlayerStore();
-  _mode: PlayerMode = "def";
 
   private _actualPlaylist: Song[] = [];
+
   private playerHistory: Song[] = [];
 
   private _currentSong: Song | null = null;
@@ -13,25 +14,14 @@ export class PlayerStore {
   progress: number = 0;
   isPlaying: boolean = false;
   isMuted: boolean = false;
-
-  set mode(value: PlayerMode) {
-    this._mode = value;
-    if (value === "shuffle") {
-      this.actualPlaylist = shuffleArray(this._actualPlaylist);
-    }
-  }
+  //modes
+  isRandom: boolean = false;
+  isLooped: boolean = false;
 
   set actualPlaylist(value: Song[]) {
     this._actualPlaylist = value;
     if (!this.currentSong) {
       this.currentSong = this._actualPlaylist[0];
-    } else {
-      const currenInPlaylist = this._actualPlaylist.find(
-        (el) => el.id === this._currentSong?.id
-      );
-      if (currenInPlaylist) {
-        this.currentSong = currenInPlaylist;
-      }
     }
   }
 
@@ -44,10 +34,11 @@ export class PlayerStore {
   }
 
   private updateHistory(): void {
-    const historyMaxSize = 5;
+    const lastSongId = this.playerHistory.at(-1)?.id;
     if (this.currentSong) {
+      if (lastSongId && this.currentSong.id === lastSongId) return;
       this.playerHistory.push(this.currentSong);
-      if (this.playerHistory.length > historyMaxSize) {
+      if (this.playerHistory.length >= this.HISTORY_MAX_SIZE) {
         this.playerHistory = this.playerHistory.slice(-5);
       }
     }
@@ -56,20 +47,15 @@ export class PlayerStore {
     const currentSongIndex = this._actualPlaylist.findIndex(
       (el) => el.id === this.currentSong?.id
     );
+
     const nextIndex = currentSongIndex + 1;
-    switch (this._mode) {
-      case "def":
-      case "shuffle": {
-        return nextIndex > this._actualPlaylist.length - 1 ? -1 : nextIndex;
-      }
-      case "both": {
-        return Math.floor(Math.random() * this._actualPlaylist.length);
-      }
-      case "cycle": {
-        return nextIndex > this._actualPlaylist.length - 1
-          ? nextIndex % this._actualPlaylist.length
-          : nextIndex;
-      }
+    if (this.isLooped) {
+      return currentSongIndex;
+    }
+    if (this.isRandom) {
+      return Math.floor(Math.random() * this._actualPlaylist.length);
+    } else {
+      return nextIndex;
     }
   }
 
@@ -79,6 +65,13 @@ export class PlayerStore {
 
   getPrevSong(): void {
     this.currentSong = this.playerHistory.pop() || null;
+    if (!this.currentSong) {
+      new Note({
+        message: "History is empty",
+      })
+        .show()
+        .autoClose(4000);
+    }
   }
 
   getNextSong(): void {
@@ -86,5 +79,12 @@ export class PlayerStore {
     const nextIndex = this.getNextSongIndex();
     this.currentSong =
       (nextIndex >= 0 && this._actualPlaylist[nextIndex]) || null;
+    if (!this.currentSong) {
+      new Note({
+        message: "No songs available for playback.",
+      })
+        .show()
+        .autoClose(4000);
+    }
   }
 }

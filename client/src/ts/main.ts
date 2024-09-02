@@ -42,9 +42,7 @@ try {
         data.listType,
         Number(params?.id) || null
       );
-      PlayerStore.instance.actualPlaylist = [
-        ...DataStore.instance.getSongsList(),
-      ];
+      PlayerStore.instance.actualPlaylist = DataStore.instance.getSongsList();
       await footerPresenter.launchCurrentSong(
         PlayerStore.instance.progress,
         PlayerStore.instance.isPlaying

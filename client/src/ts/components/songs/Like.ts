@@ -33,7 +33,7 @@ export class Like extends Component<LikeOptions> {
       </button>
     `;
   }
-  override setHandlers(): void {
+  setHandlers(): void {
     const { isLiked, onLikeClick, onLikeCustom } = this.options;
     if (!this.element) return;
     this.on("click", this.element, () => {
@@ -41,13 +41,8 @@ export class Like extends Component<LikeOptions> {
       setTimeout(() => onLikeClick(this), 400);
     });
 
-    this.on(
-      "songLike",
-      EventBus,
-      (e: CustomEventInit) => {
-        onLikeCustom(e, this);
-      },
-      { once: true }
-    );
+    this.on("songLike", EventBus, (e: CustomEventInit) => {
+      onLikeCustom(e, this);
+    });
   }
 }

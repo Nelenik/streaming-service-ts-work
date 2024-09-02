@@ -1,8 +1,8 @@
 import { Playlists, Song } from "types";
 
 export class DataStore {
-  playlists: Playlists = [];
-  songs: Song[] = [];
+  private playlists: Playlists = [];
+  private songs: Song[] = [];
 
   static instance = new DataStore();
 
@@ -14,15 +14,15 @@ export class DataStore {
     this.songs = data;
   }
 
-  mapSongsList(data: Song): void {
-    this.songs = this.songs.map((el) => {
-      if (el.id === data.id) {
-        el.likes = [...el.likes, ...data.likes];
-      }
-      return el;
-    });
-    console.log("updated song store", this.songs);
-  }
+  // mapSongsList(data: Song): void {
+  //   this.songs = this.songs.map((el) => {
+  //     if (el.id === data.id) {
+  //       el.likes = [...el.likes, ...data.likes];
+  //     }
+  //     return el;
+  //   });
+  //   console.log("updated song store", this.songs);
+  // }
 
   getPlaylists(): Playlists {
     return this.playlists;

@@ -4,22 +4,31 @@ import { EventBus } from "services";
 import { isPrevOrNext } from "types";
 
 interface ControlsOptions extends ComponentOptions {
+  isLooped: boolean;
+  isRandom: boolean;
   progress: number;
   duration: number;
-  onOff: (e: Event) => void;
-  onRange: (e: Event) => void;
+  onOff: () => void;
+  onRange: (newValue: number) => void;
   onSkip: (skipTo: "next" | "prev") => Promise<void>;
+  onRandom: (isRandom: boolean) => void;
+  onRepeat: (isLooped: boolean) => void;
 }
 
 export class Controls extends Component<ControlsOptions> {
   getTemplate(): string {
-    const { progress = 0, duration = 0 } = this.options;
+    const {
+      progress = 0,
+      duration = 0,
+      isLooped = false,
+      isRandom = false,
+    } = this.options;
     const progressStr = getSongDurStr(progress);
     const durationStr = getSongDurStr(duration);
     return html`
       <div class="player__controls">
         <div class="player__controls__header">
-          <button class="player__shaffle-btn">
+          <button class="player__shaffle-btn" data-on="${isRandom}">
             <svg
               width="16"
               height="16"
@@ -105,7 +114,7 @@ export class Controls extends Component<ControlsOptions> {
               />
             </svg>
           </button>
-          <button class="player__repeat-btn">
+          <button class="player__repeat-btn" data-on="${isLooped}">
             <svg
               width="14"
               height="12"
@@ -151,47 +160,58 @@ export class Controls extends Component<ControlsOptions> {
   }
 
   setHandlers(): void {
-    this.onPlay();
+    this.onControlClick();
     this.onRange();
-    this.onSkip();
   }
 
-  onPlay() {
-    const { onOff } = this.options;
-    const onOffBtn = this.element?.querySelector(".player__play-btn");
-    if (!onOffBtn || !(onOffBtn instanceof Element)) return;
-    this.on("click", onOffBtn, onOff);
-  }
-
-  onRange() {
-    const { onRange } = this.options;
-    const rangeInput = this.element?.querySelector("#range-play");
-    if (!(rangeInput instanceof HTMLInputElement)) return;
-    this.on("input", rangeInput, (e: Event) => {
-      onRange(e);
-    });
-
-    this.on("songPlayback", EventBus, (e: CustomEventInit) => {
-      const { progress } = e.detail;
-      rangeInput.value = progress;
-    });
-  }
-
-  onSkip() {
+  onControlClick(): void {
     if (!this.element) return;
-    const { onSkip } = this.options;
+    const { onOff, onSkip, onRandom, onRepeat } = this.options;
     this.on("click", this.element, async (e: Event) => {
       const target = e.target;
-      if (
-        !target ||
-        !(target instanceof HTMLElement) ||
-        !target.closest(".player__skip-btn")
-      )
-        return;
-      const skipToValue = target.dataset.skip;
-      if (isPrevOrNext(skipToValue)) {
-        await onSkip(skipToValue);
+      if (!target || !(target instanceof HTMLElement)) return;
+      if (target.closest(".player__play-btn")) {
+        onOff();
       }
+      if (target.closest(".player__skip-btn")) {
+        const skipToValue = target.dataset.skip;
+        if (isPrevOrNext(skipToValue)) {
+          await onSkip(skipToValue);
+        }
+      }
+      if (target.closest("[data-on]")) {
+        const nextModeState = !(target.dataset.on === "true");
+        target.dataset.on = String(nextModeState);
+        if (target.classList.contains("player__shaffle-btn")) {
+          onRandom(nextModeState);
+        } else if (target.classList.contains("player__repeat-btn")) {
+          onRepeat(nextModeState);
+        }
+      }
+    });
+  }
+
+  onRange(): void {
+    const { onRange } = this.options;
+    const rangeInput = this.element?.querySelector("#range-play");
+    const startTimeInput = this.element?.querySelector(".player__time--start");
+    if (
+      !(rangeInput instanceof HTMLInputElement) ||
+      !(startTimeInput instanceof HTMLInputElement)
+    )
+      return;
+    this.on("input", rangeInput, (e: Event) => {
+      const target = e.target;
+      if (!(target instanceof HTMLInputElement)) return;
+      onRange(Number(target.value));
+      startTimeInput.value = getSongDurStr(Number(target.value));
+    });
+
+    this.on("songPlayback", EventBus, (e: Event) => {
+      const customEvent = e as CustomEvent<{ progress: number }>;
+      const { progress } = customEvent.detail;
+      rangeInput.value = String(progress);
+      startTimeInput.value = getSongDurStr(Math.ceil(progress));
     });
   }
 }

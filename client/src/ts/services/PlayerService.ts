@@ -74,9 +74,14 @@ export class PlayerService {
     Howler.mute(muted);
   }
 
+  destroy() {
+    this.sound = null;
+    Howler.stop();
+  }
+
   private dispatchPlaybackData(): void {
-    const progress = this.sound?.seek();
-    const duration = this.sound?.duration();
+    const progress = this.sound?.seek() || 0;
+    const duration = this.sound?.duration() || 0;
     const playbackEvent = CustomEvents.get("songPlayback")({
       progress,
       duration,

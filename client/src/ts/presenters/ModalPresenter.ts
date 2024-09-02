@@ -68,10 +68,7 @@ export class ModalPresenter extends Presenter {
             message: err.response?.data.message,
             type: "warning",
           });
-          note.show();
-          wait(4000).then(() => {
-            note.close();
-          });
+          note.show().autoClose(4000);
         }
       } finally {
         this.modal?.close();

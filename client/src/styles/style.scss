@@ -1175,12 +1175,28 @@ body {
   }
 }
 
-.player__shaffle-btn svg,
-.player__repeat-btn svg {
-  width: 18px;
-  height: 18px;
-}
+.player__shaffle-btn,
+.player__repeat-btn {
 
+  svg {
+
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+
+  path {
+    transition: fill 0.3s linear;
+  }
+
+  &[data-on="false"] path {
+    fill: #AAAAAA;
+  }
+
+  &[data-on="true"] path {
+    fill: var(--color-promo);
+  }
+}
 
 
 

@@ -16,6 +16,8 @@ export class FooterPresenter extends Presenter {
   volumeComponent!: Component;
   trackNameComponent!: Component;
 
+  likePresenterInst!: Presenter;
+
   constructor(private models: FooterPresenterModels) {
     super();
     EventBus.addEventListener("playSong", async (e: CustomEventInit) => {
@@ -41,6 +43,12 @@ export class FooterPresenter extends Presenter {
     playImmediately: boolean = false
   ): Promise<void> {
     const currentSong = PlayerStore.instance.currentSong;
+    if (!currentSong) {
+      Player.destroy();
+      PlayerStore.instance.isPlaying = false;
+      this.switchPlayBtnIcon(true);
+      return;
+    }
     await this.updatePlayerView(currentSong);
     Player.playSong(currentSong, {
       onPlay: () => {
@@ -64,8 +72,7 @@ export class FooterPresenter extends Presenter {
     });
   }
 
-  async updatePlayerView(currentSong: Song | null): Promise<void> {
-    if (!currentSong) return;
+  async updatePlayerView(currentSong: Song): Promise<void> {
     const { id, name, artist, image, duration } = currentSong;
     const result = await ImageService.instance.invokeUrl(image);
     const cover = result ? result : noImage;
@@ -80,23 +87,32 @@ export class FooterPresenter extends Presenter {
     const footerLikeParent = this.trackNameComponent.element?.querySelector(
       ".player__name__header"
     );
-    if (!(footerLikeParent instanceof HTMLElement)) return;
-    const existingLikeBnt = footerLikeParent.querySelector(".track__like-btn");
-    existingLikeBnt?.remove();
+    //destroys previous like presenter instance to avoid listeners accumulation in footer
+    if (this.likePresenterInst) this.likePresenterInst.destroy();
+    if (footerLikeParent && footerLikeParent instanceof HTMLElement) {
+      const existingLikeBnt =
+        footerLikeParent.querySelector(".track__like-btn");
+      existingLikeBnt?.remove();
 
-    new LikePresenter(
-      this.models,
-      footerLikeParent,
-      checkLike(currentSong, this.models.userApi.currUsername),
-      id
-    ).init();
+      this.likePresenterInst = new LikePresenter(
+        this.models,
+        footerLikeParent,
+        checkLike(currentSong, this.models.userApi.currUsername),
+        id
+      );
+      this.likePresenterInst.init();
+    }
 
     this.controlsComponent.options = {
       onOff: this.onOffHandler,
       onRange: this.rangeHandler,
       onSkip: this.skipHandler.bind(this),
+      onRepeat: this.repeatHandler,
+      onRandom: this.randomHandler,
       progress: 0,
       duration: Math.round(duration / 1000),
+      isLooped: PlayerStore.instance.isLooped,
+      isRandom: PlayerStore.instance.isRandom,
     };
     this.volumeComponent.options = {
       onVolume: this.volumeHandler,
@@ -110,11 +126,8 @@ export class FooterPresenter extends Presenter {
     playBtn?.classList.toggle("is-paused", play);
   }
 
-  onOffHandler(e: Event): void {
+  onOffHandler(): void {
     const isPlaying = Player.isPlaying();
-    const target = e.currentTarget;
-    if (!target || !(target instanceof HTMLElement)) return;
-
     if (isPlaying) {
       Player.pause();
     } else {
@@ -122,27 +135,18 @@ export class FooterPresenter extends Presenter {
     }
   }
 
-  rangeHandler(e: Event): void {
-    const target = e.target;
-    if (!(target instanceof HTMLInputElement)) return;
-    Player.goTo(Number(target.value));
+  rangeHandler(newValue: number): void {
+    Player.goTo(newValue);
+  }
+  volumeHandler(volumeValue: number): void {
+    Player.volume(volumeValue);
   }
 
-  volumeHandler(e: Event): void {
-    const target = e.target;
-    if (!(target instanceof HTMLInputElement)) return;
-    const volumeValue = Number(target.value);
-    Player.volume(Number(volumeValue));
-  }
-
-  muteHandler(e: Event): void {
-    const target = e.target;
-    if (target && target instanceof HTMLElement) {
-      const newMuteState = !PlayerStore.instance.isMuted;
-      Player.mute(newMuteState);
-      PlayerStore.instance.isMuted = newMuteState;
-      target.classList.toggle("is-muted", newMuteState);
-    }
+  muteHandler(target: HTMLElement): void {
+    const newMuteState = !PlayerStore.instance.isMuted;
+    Player.mute(newMuteState);
+    PlayerStore.instance.isMuted = newMuteState;
+    target.classList.toggle("is-muted", newMuteState);
   }
 
   async skipHandler(skipTo: "next" | "prev"): Promise<void> {
@@ -153,8 +157,16 @@ export class FooterPresenter extends Presenter {
       }
       case "prev": {
         PlayerStore.instance.getPrevSong();
+        break;
       }
     }
     await this.launchCurrentSong(0, true);
+  }
+
+  repeatHandler(isLooped: boolean): void {
+    PlayerStore.instance.isLooped = isLooped;
+  }
+  randomHandler(isRandom: boolean): void {
+    PlayerStore.instance.isRandom = isRandom;
   }
 }

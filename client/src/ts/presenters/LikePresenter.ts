@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { Note } from "components/notes";
 import { Like } from "components/songs";
 import { Component, Presenter } from "core";
-import { checkLike, wait } from "helpers";
+import { checkLike } from "helpers";
 import { SongActions } from "models";
 import { EventBus, CustomEvents, router } from "services";
 import { isSong, Models } from "types";
@@ -10,6 +10,7 @@ import { isSong, Models } from "types";
 type LikePresenterModels = Pick<Models, "userApi" | "songApi">;
 
 export class LikePresenter extends Presenter {
+  private likeComponent!: Component;
   constructor(
     private models: LikePresenterModels,
     private likeContainer: HTMLElement,
@@ -19,12 +20,16 @@ export class LikePresenter extends Presenter {
     super();
   }
   init() {
-    new Like({
+    this.likeComponent = new Like({
       songId: this.songId,
       isLiked: this.isSongLiked,
       onLikeClick: this.onLikeClick.bind(this),
       onLikeCustom: this.onLikeCustom.bind(this),
     }).mount(this.likeContainer, "append");
+  }
+
+  destroy() {
+    if (this.likeComponent) this.likeComponent.unsetHandlers();
   }
 
   private async onLikeClick(component: Like) {
@@ -52,14 +57,12 @@ export class LikePresenter extends Presenter {
       }
     } catch (err) {
       if (err instanceof AxiosError) {
-        const note = new Note({
+        new Note({
           message: err.response?.data.message,
           type: "warning",
-        });
-        note.show();
-        wait(4000).then(() => {
-          note.close();
-        });
+        })
+          .show()
+          .autoClose(4000);
       }
     }
   }

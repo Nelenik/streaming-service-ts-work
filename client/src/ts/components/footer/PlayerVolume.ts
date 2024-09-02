@@ -2,8 +2,8 @@ import { Component, ComponentOptions } from "core";
 import { html } from "helpers";
 
 interface PlayerVolumeOptions extends ComponentOptions {
-  onVolume: (e: Event) => void;
-  onMute: (e: Event) => void;
+  onVolume: (volumeValue: number) => void;
+  onMute: (target: HTMLElement) => void;
 }
 
 export class PlayerVolume extends Component<PlayerVolumeOptions> {
@@ -61,13 +61,17 @@ export class PlayerVolume extends Component<PlayerVolumeOptions> {
     const { onVolume } = this.options;
     const volumeInput = this.element?.querySelector("#range-value");
     if (!(volumeInput instanceof HTMLInputElement)) return;
-    this.on("input", volumeInput, onVolume);
+    this.on("input", volumeInput, () => {
+      onVolume(Number(volumeInput.value));
+    });
   }
 
   onMute() {
     const { onMute } = this.options;
     const muteBtn = this.element?.querySelector(".player__mute");
     if (!(muteBtn instanceof HTMLElement)) return;
-    this.on("click", muteBtn, onMute);
+    this.on("click", muteBtn, () => {
+      onMute(muteBtn);
+    });
   }
 }
