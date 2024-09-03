@@ -1,3 +1,4 @@
+import { Model } from "core";
 import Api from "services";
 import { Login, Signup } from "types";
 
@@ -6,7 +7,7 @@ interface AuthRes {
   username: string;
 }
 
-class AuthModel {
+class AuthModel extends Model {
   async login(loginData: Login): Promise<AuthRes> {
     try {
       const { data } = await Api.post("auth/login", loginData);

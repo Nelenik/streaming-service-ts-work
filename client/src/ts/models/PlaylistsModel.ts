@@ -1,4 +1,5 @@
-import { handleAxiosRequest } from "helpers";
+import { Model } from "core";
+// import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { PlaylistName, Playlist, Song } from "types";
 
@@ -18,29 +19,33 @@ export interface PlaylistActionsOpts {
   songId?: number;
 }
 
-export class PlaylistModel {
+export class PlaylistModel extends Model {
   private async addNewPlaylist(body: PlaylistName): Promise<Playlist> {
-    return handleAxiosRequest(() => Api.post("playlists", body));
+    return this.handleAxiosRequest(() => Api.post("playlists", body));
   }
   private async renamePlaylist(
     body: PlaylistName,
     playlistId: number
   ): Promise<Playlist> {
-    return handleAxiosRequest(() => Api.post(`playlists/${playlistId}`, body));
+    return this.handleAxiosRequest(() =>
+      Api.post(`playlists/${playlistId}`, body)
+    );
   }
   private async deletePlaylist(playlistId: number): Promise<Playlist> {
-    return handleAxiosRequest(() => Api.delete(`playlists/${playlistId}`));
+    return this.handleAxiosRequest(() => Api.delete(`playlists/${playlistId}`));
   }
   private async fetchOnePlaylist(playlistId: number): Promise<Playlist> {
-    return handleAxiosRequest(() => Api.get(`playlists/${playlistId}`));
+    return this.handleAxiosRequest(() => Api.get(`playlists/${playlistId}`));
   }
 
   private async fetchPlaylistSongs(playlistId: number): Promise<Song[]> {
-    return handleAxiosRequest(() => Api.get(`playlists/${playlistId}/songs`));
+    return this.handleAxiosRequest(() =>
+      Api.get(`playlists/${playlistId}/songs`)
+    );
   }
 
   private async addSong(playlistId: number, songId: number): Promise<Playlist> {
-    return handleAxiosRequest(() =>
+    return this.handleAxiosRequest(() =>
       Api.post(`playlists/${playlistId}/add/${songId}`)
     );
   }
@@ -48,7 +53,7 @@ export class PlaylistModel {
     playlistId: number,
     songId: number
   ): Promise<Playlist> {
-    return handleAxiosRequest(() =>
+    return this.handleAxiosRequest(() =>
       Api.post(`playlists/${playlistId}/remove/${songId}`)
     );
   }

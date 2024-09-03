@@ -41,8 +41,12 @@ export class Like extends Component<LikeOptions> {
       setTimeout(() => onLikeClick(this), 400);
     });
 
-    this.on("songLike", EventBus, (e: CustomEventInit) => {
-      onLikeCustom(e, this);
+    this.on("songLike", EventBus, (e: Event) => {
+      const customEvent = e as CustomEvent<{
+        songId: number;
+        isLiked: boolean;
+      }>;
+      onLikeCustom(customEvent, this);
     });
   }
 }

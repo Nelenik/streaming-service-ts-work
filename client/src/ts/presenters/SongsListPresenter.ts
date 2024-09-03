@@ -39,14 +39,14 @@ export class SongsListPresenter extends Presenter {
     });
   }
 
-  init() {
+  init(): void {
     this.songsListComponent = new SongsList({ title: this.listTitle }).mount(
       ".main",
       "append"
     );
   }
 
-  async mountSongs(actualSongList: Song[]) {
+  async mountSongs(actualSongList: Song[]): Promise<void> {
     for (let i = 0; i < actualSongList.length; i++) {
       const song = actualSongList[i];
       const songPresenter = new SongPresenter(
@@ -60,7 +60,10 @@ export class SongsListPresenter extends Presenter {
     }
   }
 
-  async getActualList(listType: ListType, playlistId: number | null) {
+  async getActualList(
+    listType: ListType,
+    playlistId: number | null
+  ): Promise<void> {
     this.playlistId = playlistId;
 
     const { userApi, songApi, playlistApi } = this.models;

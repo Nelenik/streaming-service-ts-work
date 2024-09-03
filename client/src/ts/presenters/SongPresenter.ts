@@ -21,13 +21,13 @@ export class SongPresenter extends Presenter {
     super();
   }
 
-  async init() {
+  async init(): Promise<void> {
     await this.renderSongComponent();
     this.renderLikeComponent();
     this.renderSongMenu();
   }
 
-  private async renderSongComponent() {
+  private async renderSongComponent(): Promise<void> {
     const { id, duration, createdAt, name, artist, album, image } =
       this.songData;
 
@@ -45,7 +45,7 @@ export class SongPresenter extends Presenter {
     }).mount(".tracks__list", "append");
   }
 
-  private renderLikeComponent() {
+  private renderLikeComponent(): void {
     const { userApi } = this.models;
     if (!this.songComponent.element) return;
     const likeParent = this.songComponent.element.querySelector(
@@ -60,7 +60,7 @@ export class SongPresenter extends Presenter {
     ).init();
   }
 
-  private renderSongMenu() {
+  private renderSongMenu(): void {
     new SongMenu({
       inPlaylist: this.inPlaylist,
       onMenuClick: this.openModal.bind(this),
@@ -68,7 +68,7 @@ export class SongPresenter extends Presenter {
     }).mount(this.songComponent.element, "append");
   }
 
-  openModal(type: ModalType) {
+  openModal(type: ModalType): void {
     this.modalPresenter = new ModalPresenter(type, this.songData.id, {
       userApi: this.models.userApi,
       playlistApi: this.models.playlistApi,

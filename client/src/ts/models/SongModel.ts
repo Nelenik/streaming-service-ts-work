@@ -1,4 +1,5 @@
-import { handleAxiosRequest } from "helpers";
+import { Model } from "core";
+// import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { Song } from "types";
 
@@ -9,24 +10,27 @@ export enum SongActions {
   UNLIKE = "UNLIKE",
 }
 
-export class SongModel {
+export class SongModel extends Model {
   private async getAllSongs(): Promise<Song[]> {
-    return handleAxiosRequest(() => Api.get("songs"));
+    return this.handleAxiosRequest(() => Api.get("songs"));
   }
 
   private async getOneSong(songId: number): Promise<Song> {
-    return handleAxiosRequest(() => Api.get(`songs/${songId}`));
+    return this.handleAxiosRequest(() => Api.get(`songs/${songId}`));
   }
 
   private async likeSong(songId: number): Promise<Song> {
-    return handleAxiosRequest(() => Api.post(`songs/${songId}/like`));
+    return this.handleAxiosRequest(() => Api.post(`songs/${songId}/like`));
   }
 
   private async unlikeSong(songId: number): Promise<Song> {
-    return handleAxiosRequest(() => Api.post(`songs/${songId}/unlike`));
+    return this.handleAxiosRequest(() => Api.post(`songs/${songId}/unlike`));
   }
 
-  public handleSongsAction(action: SongActions, id?: number) {
+  public handleSongsAction(
+    action: SongActions,
+    id?: number
+  ): Promise<Song[] | Song> {
     switch (action) {
       case SongActions.FETCH_ALL: {
         return this.getAllSongs();

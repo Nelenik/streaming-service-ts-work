@@ -6,11 +6,11 @@ import { Playlists } from "types";
 export class PlaylistPresenter extends Presenter {
   public playlistsComponent!: Component;
 
-  init() {
+  init(): void {
     this.playlistsComponent = new PlaylistsList().mount(".main", "append");
   }
 
-  async mountPlaylists(actualPlaylists: Playlists) {
+  async mountPlaylists(actualPlaylists: Playlists): Promise<void> {
     for (const playlist of actualPlaylists) {
       const playlistOptions = await formPlaylistViewData(playlist);
       new PlaylistComp(playlistOptions).mount(".playlist__list", "append");

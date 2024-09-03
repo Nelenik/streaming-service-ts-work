@@ -1,4 +1,4 @@
-import { defImages } from "models";
+import { defImages } from "helpers";
 
 export const getRandomPlaylistCover = (count: number): string => {
   const array: number[] = Array.from({ length: count }, (v, i) => i + 1);

@@ -1,17 +1,19 @@
-import { handleAxiosRequest } from "helpers";
+import { Model } from "core";
+// import { handleAxiosRequest } from "helpers";
 import Api from "services";
 import { Playlists, User, UserFull, UserLikes } from "types";
-export class UserModel {
+export class UserModel extends Model {
   readonly currUsername: string;
 
   constructor() {
+    super();
     const { username } = JSON.parse(
       localStorage.getItem("PlayServiceAuth") || "{}"
     );
     this.currUsername = username;
   }
   private async getUsers(): Promise<User[]> {
-    return handleAxiosRequest(() => Api.get("users"));
+    return this.handleAxiosRequest(() => Api.get("users"));
   }
 
   public async getUser(): Promise<User> {
@@ -28,10 +30,10 @@ export class UserModel {
   }
 
   public async getPlaylists(): Promise<Playlists> {
-    return handleAxiosRequest(() => Api.get(`users/playlists`));
+    return this.handleAxiosRequest(() => Api.get(`users/playlists`));
   }
   public async getUserLikes(): Promise<UserLikes> {
-    return handleAxiosRequest(() => Api.get(`users/likes`));
+    return this.handleAxiosRequest(() => Api.get(`users/likes`));
   }
 
   public async getUserFull(): Promise<UserFull> {

@@ -20,14 +20,16 @@ export class FooterPresenter extends Presenter {
 
   constructor(private models: FooterPresenterModels) {
     super();
-    EventBus.addEventListener("playSong", async (e: CustomEventInit) => {
-      const { songId } = e.detail;
+    EventBus.addEventListener("playSong", async (e: Event) => {
+      const customEvent = e as CustomEvent<{ songId: number }>;
+      const { songId } = customEvent.detail;
       PlayerStore.instance.getSongById(songId);
       await this.launchCurrentSong(0, true);
     });
 
-    EventBus.addEventListener("songPlayback", (e: CustomEventInit) => {
-      const { progress } = e.detail;
+    EventBus.addEventListener("songPlayback", (e: Event) => {
+      const customEvent = e as CustomEvent<{ progress: number }>;
+      const { progress } = customEvent.detail;
       PlayerStore.instance.progress = progress;
     });
   }

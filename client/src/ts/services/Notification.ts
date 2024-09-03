@@ -28,7 +28,7 @@ export class NoteService {
     this.notesWrapper.append(note);
   }
 
-  clearAllNotes() {
+  clearAllNotes(): void {
     this.notesWrapper.replaceChildren();
   }
 }

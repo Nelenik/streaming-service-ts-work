@@ -19,7 +19,7 @@ export class LikePresenter extends Presenter {
   ) {
     super();
   }
-  init() {
+  init(): void {
     this.likeComponent = new Like({
       songId: this.songId,
       isLiked: this.isSongLiked,
@@ -28,11 +28,11 @@ export class LikePresenter extends Presenter {
     }).mount(this.likeContainer, "append");
   }
 
-  destroy() {
+  destroy(): void {
     if (this.likeComponent) this.likeComponent.unsetHandlers();
   }
 
-  private async onLikeClick(component: Like) {
+  private async onLikeClick(component: Like): Promise<void> {
     const { songApi, userApi } = this.models;
     const songId = component.options.songId;
     const isLiked = component.options.isLiked;
@@ -67,7 +67,7 @@ export class LikePresenter extends Presenter {
     }
   }
   //synchronization between likes in playlist and in player
-  private onLikeCustom(e: CustomEventInit, component: Component) {
+  private onLikeCustom(e: CustomEventInit, component: Component): void {
     const { songId, isLiked } = e.detail;
     if (component.options.songId === songId) {
       component.options = {

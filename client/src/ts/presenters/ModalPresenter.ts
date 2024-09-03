@@ -19,7 +19,7 @@ export class ModalPresenter extends Presenter {
   ) {
     super();
   }
-  async init() {
+  async init(): Promise<void> {
     switch (this.type) {
       case "add": {
         const playlists = DataStore.instance.getPlaylists();
@@ -48,7 +48,10 @@ export class ModalPresenter extends Presenter {
     this.modal.open();
   }
 
-  onModalAction(songId: number, action: PlaylistActions) {
+  onModalAction(
+    songId: number,
+    action: PlaylistActions
+  ): (playlistId: number) => Promise<void> {
     const { playlistApi } = this.models;
     return async (playlistId: number) => {
       try {

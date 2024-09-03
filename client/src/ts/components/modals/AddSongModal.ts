@@ -26,7 +26,7 @@ export class AddSongModal extends BaseModal<AddSongModalOptions> {
     `;
   }
 
-  getPlaylistElements() {
+  getPlaylistElements(): string {
     const { playlistsToRender } = this.options;
     return playlistsToRender
       .map((data) => {

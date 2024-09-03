@@ -13,13 +13,13 @@ export class Modal {
     return this._place;
   }
 
-  open(component: Component) {
+  open(component: Component): void {
     this.close();
     this.openedComponent = component;
     this.openedComponent.mount(this._place, "append");
   }
 
-  close() {
+  close(): void {
     if (this.openedComponent) {
       this.openedComponent.element?.remove();
       this.openedComponent = null;

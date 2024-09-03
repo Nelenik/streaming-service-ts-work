@@ -3,7 +3,6 @@ import { html, wait } from "helpers";
 import { Modal } from "services";
 
 export interface BaseModalOptions extends ComponentOptions {
-  // content: Component;
   showingCssClass: string;
 }
 
@@ -14,13 +13,13 @@ export class BaseModal<
     return html` <div></div> `;
   }
 
-  open() {
+  open(): void {
     Modal.instance.open(this);
     wait(100).then(() => {
       this.element?.classList.add(this.options.showingCssClass);
     });
   }
-  close() {
+  close(): void {
     this.element?.classList.remove(this.options.showingCssClass);
     wait(500).then(() => Modal.instance.close());
   }

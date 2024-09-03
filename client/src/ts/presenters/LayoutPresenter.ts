@@ -3,7 +3,7 @@ import { Layout } from "components/layout";
 import { Component, Presenter } from "core";
 import { PlaylistModel, SongModel, UserModel } from "models";
 import { PlaylistPresenter, SongsListPresenter } from "presenters";
-import { isPlaylists, isSongList, ListType } from "types";
+import { isPlaylists, isSongList, ListType, Playlists, Song } from "types";
 import { EventBus } from "services";
 import { DataStore } from "storages";
 
@@ -38,18 +38,24 @@ export class LayoutPresenter extends Presenter {
   }
 
   //eventBus handlers
-  onFilter = async (e: CustomEventInit) => {
-    const { filtredData } = e.detail;
+  onFilter = async (e: Event) => {
+    const customEvent = e as CustomEvent<{ filtredData: Playlists[] | Song[] }>;
+    const { filtredData } = customEvent.detail;
     this.cleanMainBlock();
     if (isSongList(filtredData)) {
       this.songsListPresInst?.init();
       await this.songsListPresInst?.mountSongs(filtredData);
     } else if (isPlaylists(filtredData)) {
-      await this.drawPlaylists();
+      this.playlistPresInst?.init();
+      await this.playlistPresInst?.mountPlaylists(filtredData);
     }
   };
-  onRerenderList = async (e: CustomEventInit) => {
-    const { listType, id } = e.detail;
+  onRerenderList = async (e: Event) => {
+    const customEvent = e as CustomEvent<{
+      listType: ListType;
+      id: null | number;
+    }>;
+    const { listType, id } = customEvent.detail;
     await this.drawSongsList(listType, id);
   };
 

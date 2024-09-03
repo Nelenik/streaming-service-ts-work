@@ -74,7 +74,7 @@ export class PlayerService {
     Howler.mute(muted);
   }
 
-  destroy() {
+  destroy(): void {
     this.sound = null;
     Howler.stop();
   }
