@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
 import { AddSongModal, BaseModal, RemoveSongModal } from "components/modals";
 import { Note } from "components/notes";
-import { Component, Presenter } from "core";
+import { Presenter } from "core";
 import { formPlaylistViewData, wait } from "helpers";
 import { PlaylistActions } from "models";
-import { CustomEvents, EventBus, Modal } from "services";
+import { CustomEvents, EventBus } from "services";
 import { DataStore } from "storages";
 import { ModalType, Models } from "types";
 
@@ -20,7 +20,6 @@ export class ModalPresenter extends Presenter {
     super();
   }
   async init() {
-    let content: Component;
     switch (this.type) {
       case "add": {
         const playlists = DataStore.instance.getPlaylists();
@@ -28,14 +27,16 @@ export class ModalPresenter extends Presenter {
           playlists.map(async (el) => await formPlaylistViewData(el))
         );
 
-        content = new AddSongModal({
+        this.modal = new AddSongModal({
+          showingCssClass: "show",
           playlistsToRender,
           onAdd: this.onModalAction(this.songId, PlaylistActions.ADD_SONG),
         });
         break;
       }
       case "remove": {
-        content = new RemoveSongModal({
+        this.modal = new RemoveSongModal({
+          showingCssClass: "show",
           onRemove: this.onModalAction(
             this.songId,
             PlaylistActions.REMOVE_SONG
@@ -44,11 +45,7 @@ export class ModalPresenter extends Presenter {
         break;
       }
     }
-    this.modal = new BaseModal({ content });
-    Modal.instance.open(this.modal);
-    wait(0).then(() => {
-      this.modal?.element?.classList.add("show");
-    });
+    this.modal.open();
   }
 
   onModalAction(songId: number, action: PlaylistActions) {
@@ -64,11 +61,12 @@ export class ModalPresenter extends Presenter {
         );
       } catch (err) {
         if (err instanceof AxiosError) {
-          const note = new Note({
+          new Note({
             message: err.response?.data.message,
             type: "warning",
-          });
-          note.show().autoClose(4000);
+          })
+            .show()
+            .autoClose(4000);
         }
       } finally {
         this.modal?.close();

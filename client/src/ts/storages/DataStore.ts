@@ -14,16 +14,6 @@ export class DataStore {
     this.songs = data;
   }
 
-  // mapSongsList(data: Song): void {
-  //   this.songs = this.songs.map((el) => {
-  //     if (el.id === data.id) {
-  //       el.likes = [...el.likes, ...data.likes];
-  //     }
-  //     return el;
-  //   });
-  //   console.log("updated song store", this.songs);
-  // }
-
   getPlaylists(): Playlists {
     return this.playlists;
   }

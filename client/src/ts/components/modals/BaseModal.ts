@@ -2,44 +2,54 @@ import { Component, ComponentOptions } from "core";
 import { html, wait } from "helpers";
 import { Modal } from "services";
 
-interface BaseModalOptions extends ComponentOptions {
-  content: Component;
+export interface BaseModalOptions extends ComponentOptions {
+  // content: Component;
+  showingCssClass: string;
 }
 
-export class BaseModal extends Component<BaseModalOptions> {
-  constructor(options: BaseModalOptions) {
-    super(options);
-
-    this.options.content.mount(this.element, "append");
-  }
+export class BaseModal<
+  T extends BaseModalOptions = BaseModalOptions,
+> extends Component<T> {
   getTemplate(): string {
-    return html` <div class="playlists-modal"></div> `;
+    return html` <div></div> `;
+  }
+
+  open() {
+    Modal.instance.open(this);
+    wait(100).then(() => {
+      this.element?.classList.add(this.options.showingCssClass);
+    });
+  }
+  close() {
+    this.element?.classList.remove(this.options.showingCssClass);
+    wait(500).then(() => Modal.instance.close());
   }
 
   setHandlers(): void {
-    if (!this.element) return;
-    this.on("click", this.element, this.onClickHandler.bind(this));
-
-    this.on("keyup", document, this.onEscHandler.bind(this));
+    this.closeOnEsc();
+    this.closeOnOverlayClick();
   }
 
-  onClickHandler(e: Event) {
-    const target = e.target;
-    if (!(target instanceof Element)) return;
-    if (
-      target.closest(".playlists-modal__close-btn") ||
-      !target.closest(".playlists-modal__content")
-    ) {
+  closeOnEsc(): void {
+    this.on("keyup", document, (e: KeyboardEventInit) => {
+      if (e.code !== "Escape") return;
       this.close();
-    }
-  }
-  onEscHandler(e: KeyboardEventInit) {
-    if (e.code !== "Escape") return;
-    this.close();
+    });
   }
 
-  close() {
-    this.element?.classList.remove("show");
-    wait(500).then(() => Modal.instance.close());
+  closeOnOverlayClick(): void {
+    if (!this.element) return;
+    this.on("click", this.element, (e: Event) => {
+      if (e.target === e.currentTarget) {
+        this.close();
+      }
+    });
+  }
+
+  closeOnBtnClick(closeBtnSelector: string): void {
+    const closeBtn = this.element?.querySelector(closeBtnSelector);
+    if (closeBtn) {
+      this.on("click", closeBtn, this.close.bind(this));
+    }
   }
 }
