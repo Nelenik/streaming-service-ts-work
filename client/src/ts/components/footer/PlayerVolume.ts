@@ -57,7 +57,7 @@ export class PlayerVolume extends Component<PlayerVolumeOptions> {
     this.onMute();
   }
 
-  onVolume() {
+  onVolume(): void {
     const { onVolume } = this.options;
     const volumeInput = this.element?.querySelector("#range-value");
     if (!(volumeInput instanceof HTMLInputElement)) return;
@@ -66,7 +66,7 @@ export class PlayerVolume extends Component<PlayerVolumeOptions> {
     });
   }
 
-  onMute() {
+  onMute(): void {
     const { onMute } = this.options;
     const muteBtn = this.element?.querySelector(".player__mute");
     if (!(muteBtn instanceof HTMLElement)) return;

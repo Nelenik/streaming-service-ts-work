@@ -119,7 +119,7 @@ export class Aside extends Component<AsideOptions> {
       </aside>
     `;
   }
-  getPlaylistsCtrls() {
+  getPlaylistsCtrls(): string {
     const { userPlaylists } = this.options;
     return userPlaylists
       .map((playlist: Playlist) => {

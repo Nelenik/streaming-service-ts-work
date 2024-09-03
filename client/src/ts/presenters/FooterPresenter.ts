@@ -33,7 +33,7 @@ export class FooterPresenter extends Presenter {
       PlayerStore.instance.progress = progress;
     });
   }
-  init() {
+  init(): void {
     this.footerComponent = new Footer().mount("#app", "append");
     this.trackNameComponent = new TrackName().mount(".player", "append");
     this.controlsComponent = new Controls().mount(".player", "append");

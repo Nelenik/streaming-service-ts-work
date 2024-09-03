@@ -1,7 +1,7 @@
 export class ImageService {
   imageUrlMap: Map<string, string> = new Map();
   static instance = new ImageService();
-  private async getHash(string: string) {
+  private async getHash(string: string): Promise<string> {
     const stringUint8 = new TextEncoder().encode(string); // encode as (utf-8) Uint8Array
     const hashBuffer = await window.crypto.subtle.digest(
       "SHA-256",
@@ -14,7 +14,7 @@ export class ImageService {
     return hashHex;
   }
 
-  private async convertToBlob(value: string | Blob) {
+  private async convertToBlob(value: string | Blob): Promise<Blob> {
     if (value instanceof Blob) return value;
     const response = await fetch(value);
     const blobFromBaseStr = await response.blob();
@@ -33,7 +33,7 @@ export class ImageService {
     return blobUrl;
   }
 
-  public async revokeUrl(value: string) {
+  public async revokeUrl(value: string): Promise<void> {
     const hash = await this.getHash(value);
     const objectUrl = this.imageUrlMap.get(hash);
     if (!objectUrl) return;

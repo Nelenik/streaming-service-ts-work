@@ -59,12 +59,15 @@ export class LayoutPresenter extends Presenter {
     await this.drawSongsList(listType, id);
   };
 
-  cleanMainBlock() {
+  cleanMainBlock(): void {
     const main = this.layoutComponent.element?.querySelector(".main");
     main?.replaceChildren();
   }
 
-  async drawSongsList(listType: ListType, playlistId: number | null = null) {
+  async drawSongsList(
+    listType: ListType,
+    playlistId: number | null = null
+  ): Promise<void> {
     this.cleanMainBlock();
     if (!this.songsListPresInst) {
       this.songsListPresInst = new SongsListPresenter(this.models);
@@ -74,7 +77,7 @@ export class LayoutPresenter extends Presenter {
     await this.songsListPresInst.mountSongs(DataStore.instance.getSongsList());
   }
 
-  async drawPlaylists() {
+  async drawPlaylists(): Promise<void> {
     this.cleanMainBlock();
     if (!this.playlistPresInst) {
       this.playlistPresInst = new PlaylistPresenter();

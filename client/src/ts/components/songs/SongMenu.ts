@@ -55,7 +55,7 @@ export class SongMenu extends Component<SongMenuOptions> {
     this.onEsc();
   }
 
-  onClick() {
+  onClick(): void {
     const { onMenuClick, inPlaylist } = this.options;
     if (this.element instanceof Element) {
       this.on("click", this.element, (e) => {
