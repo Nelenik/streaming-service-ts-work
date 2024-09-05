@@ -1,46 +1,103 @@
-import { renderElement } from "core";
-import { createElement } from "helpers";
+import { render, createElement } from "core";
 import { InsertMethods } from "types";
+import { deepEqual, getContainer } from "helpers";
 
 export interface ComponentOptions {
   [key: string]: unknown;
 }
-export abstract class Component<T = ComponentOptions> {
+export abstract class Component<T extends ComponentOptions = ComponentOptions> {
   private _element: HTMLElement | null = null;
 
-  constructor(protected options: T = null) {
+  private componentHandlers: Array<{
+    target: EventTarget;
+    eventType: string;
+    listener: EventListenerOrEventListenerObject;
+    options?: AddEventListenerOptions;
+  }> = [];
+
+  constructor(protected _options: T = {} as T) {
     this.getElement();
-    this.renderParts();
   }
 
   abstract getTemplate(): string;
 
-  set element(val) {
-    this._element = val;
+  set options(val) {
+    if (deepEqual(val, this._options)) return;
+    this._options = val;
+    this.getElement();
+  }
+
+  get options() {
+    return this._options;
   }
 
   get element() {
     return this._element;
   }
 
-  getElement(): HTMLElement {
-    this.element ??= createElement(this.getTemplate());
-    return this.element;
+  getElement(): Element {
+    //remove eventlisteners before element updating
+    this.unsetHandlers();
+
+    const newElement = createElement(this.getTemplate());
+    if (this._element === null) {
+      this._element = newElement;
+    } else {
+      this._element.replaceWith(newElement);
+      this._element = newElement;
+    }
+    this.setHandlers();
+    return this._element;
   }
-  removeElement(): void {
-    this.element = null;
+  removeElement(): Component {
+    this.unsetHandlers();
+    this._element = null;
+    return this;
   }
 
-  insertChildren(
-    selectorOrElement: string | Element,
-    elToInsert: HTMLElement | HTMLElement[],
-    method: InsertMethods
-  ) {
-    const container =
-      selectorOrElement instanceof Element
-        ? selectorOrElement
-        : this.element.querySelector(selectorOrElement);
-    renderElement(container, elToInsert, method);
+  setHandlers(): void {}
+
+  unsetHandlers(): void {
+    this.componentHandlers.forEach((handlerData) => {
+      const { eventType, target, listener, options } = handlerData;
+      target.removeEventListener(eventType, listener, options);
+    });
+    this.componentHandlers = [];
   }
-  renderParts(): void {}
+
+  mount(
+    selectorOrElement: null | string | Element,
+    method: InsertMethods
+  ): Component {
+    try {
+      const container = getContainer(selectorOrElement);
+      render(container, this, method);
+    } catch (err) {
+      console.error(`Error mounting the component: ${err}`);
+    }
+    return this;
+  }
+
+  on(
+    eventType: string,
+    element: EventTarget,
+    listener: EventListenerOrEventListenerObject,
+    options?: AddEventListenerOptions
+  ) {
+    element.addEventListener(eventType, listener, options);
+    this.componentHandlers.push({
+      target: element,
+      eventType,
+      listener,
+      options,
+    });
+  }
+  // off(
+  //   eventType: string,
+  //   element: EventTarget,
+  //   listener: EventListenerOrEventListenerObject = NOOP,
+  //   options?: AddEventListenerOptions
+  // ) {
+  //   element.removeEventListener(eventType, listener, options);
+  // }
 }

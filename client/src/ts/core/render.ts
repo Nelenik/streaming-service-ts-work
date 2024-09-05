@@ -1,4 +1,5 @@
 import { InsertMethods } from "types";
+import { Component } from "./Component";
 
 export type RenderHTML = (
   container: HTMLElement,
@@ -6,9 +7,9 @@ export type RenderHTML = (
   place: InsertPosition
 ) => void;
 
-export type RenderElement = (
+export type Render = (
   container: HTMLElement | Node | Element,
-  element: HTMLElement | HTMLElement[],
+  component: Component | Component[],
   method: InsertMethods
 ) => void;
 
@@ -17,14 +18,17 @@ export const renderHTML: RenderHTML = (container, component, place) => {
   container.insertAdjacentHTML(place, component);
 };
 
-//inserting using methods append, prepend, before, after
-export const renderElement: RenderElement = (container, element, method) => {
-  if (!Array.isArray(element)) element = [element];
+//inserting component using methods append, prepend, before, after
+export const render: Render = (container, component, method = "append") => {
+  if (!Array.isArray(component)) component = [component];
   if (
     container instanceof HTMLElement &&
     typeof container[method] === "function"
   ) {
-    container[method](...element);
+    component.forEach((componentInst: Component) => {
+      if (componentInst.element instanceof Node)
+        container[method](componentInst.element);
+    });
   } else {
     throw new Error(
       `Method "${method}" is not a valid function on the container.`

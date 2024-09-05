@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "strict": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "ESNext",
-    "target":"ES6",
+    "target":"ES2017",
     "allowJs": true,
     "moduleResolution": "Bundler",
     "sourceMap": true,
@@ -14,7 +15,12 @@
       "helpers":["src/ts/helpers"],
       "types": ["src/types"],
       "mocks": ["src/mocks"],
-      "core": ["src/ts/core"]
+      "core": ["src/ts/core"],
+      "presenters": ["src/ts/presenters"],
+      "storages":["src/ts/storages"],
+      "styles" : ["src/styles"],
+      "services" : ["src/ts/services"],
+      "models" : ["src/ts/models"]
     },
     "lib": ["ESNext", "DOM"]
   },

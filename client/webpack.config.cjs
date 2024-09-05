@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
@@ -20,12 +21,14 @@ const config = {
     path: path.resolve(__dirname, "dist"),
     filename: `js/${filename("[name]", ".js")}`,
     clean: true,
+    publicPath: "/",
   },
   devServer: {
     open: true,
     hot: false,
     liveReload: true,
     host: "localhost",
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -76,6 +79,11 @@ const config = {
       types: path.resolve(__dirname, "src/types"),
       mocks: path.resolve(__dirname, "src/mocks"),
       core: path.resolve(__dirname, "src/ts/core"),
+      presenters: path.resolve(__dirname, "src/ts/presenters"),
+      storages: path.resolve(__dirname, "src/ts/storages"),
+      styles: path.resolve(__dirname, "src/styles"),
+      services: path.resolve(__dirname, "src/ts/services"),
+      models: path.resolve(__dirname, "src/ts/models"),
     },
   },
 };
