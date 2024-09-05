@@ -17,7 +17,7 @@ router.on("/error", () => {
 });
 
 //AUTH
-const loginData: Login = { username: "HelNek", password: "HelNek" };
+const loginData: Login = { username: "User", password: "User" };
 try {
   const res = await authApi.login(loginData);
   localStorage.setItem("PlayServiceAuth", JSON.stringify(res));
