@@ -30,7 +30,7 @@ export class PlayerService {
     }
 
     this.sound = new Howl({
-      src: [`http://localhost:3000${song.path}`],
+      src: [`https://streaming-service-api-pg.onrender.com${song.path}`],
       html5: true,
       volume: 0.3,
       onplay: () => {
