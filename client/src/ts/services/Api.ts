@@ -2,7 +2,7 @@ import axios from "axios";
 
 const Api = axios.create({
   baseURL: "https://streaming-service-api-pg.onrender.com/api",
-  timeout: 5000,
+  // timeout: 5000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

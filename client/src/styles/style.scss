@@ -1747,10 +1747,10 @@ body {
     margin: 0;
   }
 
-  .player__shaffle-btn,
+  // .player__shaffle-btn,
   .player__skipback-btn,
   .player__skipnext-btn,
-  .player__repeat-btn,
+  // .player__repeat-btn,
   .tracks__item__number,
   .header__user__svg {
     display: none;
@@ -1766,9 +1766,17 @@ body {
     right: 16px;
   }
 
-  .player__controls__header button:not(:last-child) {
-    margin: 0;
+  .player__controls__header {
+    gap: 10px;
+
+    button:not(:last-child) {
+      margin: 0;
+    }
   }
+
+  // .player__controls__header button:not(:last-child) {
+  //   margin: 0;
+  // }
 
   .player__track-name {
     max-width: 100%;

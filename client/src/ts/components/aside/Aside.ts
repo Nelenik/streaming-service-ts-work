@@ -142,6 +142,17 @@ export class Aside extends Component<AsideOptions> {
   setHandlers(): void {
     if (!this.element) return;
 
+    const openSearchBtn = this.element.querySelector(".search__btn-open");
+    if (openSearchBtn instanceof Element) {
+      this.on("click", openSearchBtn, () => {
+        const searchForm = document.querySelector(".header__search");
+        searchForm?.classList.toggle(
+          "search--active",
+          !searchForm.classList.contains("search--active")
+        );
+      });
+    }
+
     this.on("click", this.element, (e: Event) => {
       const target = (e.target as HTMLElement)?.closest<HTMLElement>(
         ".aside__btn"
